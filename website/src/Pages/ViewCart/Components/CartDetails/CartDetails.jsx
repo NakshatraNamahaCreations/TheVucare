@@ -296,13 +296,6 @@ export default function CartDetails() {
     return addonCategory?.includes(cate);
   });
 
-  const handleCheckboxSelect = (day) => {
-    const formattedDate = `${day.year}-${day.month}-${day.day}`;
-    const selectedDate = moment(formattedDate, "YYYY-MM-DD");
-
-    setSelectedDate(selectedDate.format("LL"));
-  };
-
   const handleCalendarSelect = (date) => {
     const selectedDate = moment.isMoment(date) ? date.toDate() : date;
     setSelectedDate(selectedDate);
@@ -328,7 +321,7 @@ export default function CartDetails() {
     12: "December",
   };
   const isDateSelected = (day) => {
-    if (!selectedDate) return false; // If selectedDate is null or undefined, return false
+    if (!selectedDate) return false;
 
     const { day: dayNumber, month, year } = day;
     const monthName = monthsMap[month];
@@ -346,6 +339,15 @@ export default function CartDetails() {
     return formattedDay === selectedDate;
   };
 
+  const handleCheckboxSelect = (day) => {
+    const formattedDate = moment(
+      `${day.year}-${day.month}-${day.day}`,
+      "YYYY-MM-DD"
+    );
+    const formattedDateString = formattedDate.format("LL");
+
+    setSelectedDate(formattedDateString);
+  };
   const serviceidd = services?.flatMap((ele) => ele);
 
   const selectedSlotTextget = selectedSlotsID
@@ -800,21 +802,20 @@ export default function CartDetails() {
 
                   <div className="date_selection">
                     {fourDates?.map((day, index) => {
-                      const isDefaultChecked = isDateSelected(day);
+                      const isChecked = isDateSelected(day);
 
                       return (
-                        <label htmlFor={index} key={index}>
+                        <label htmlFor={day.id} key={index}>
                           <input
                             type="checkbox"
-                            // defaultChecked={isDefaultChecked}
-                            name=""
-                            id={day?.day}
+                            checked={isChecked}
+                            onChange={() => handleCheckboxSelect(day)}
+                            name={day.id}
+                            id={day.id}
                           />
 
                           <span
-                            className={`inpt ${
-                              isDefaultChecked ? "matching" : ""
-                            }`}
+                            className={`inpt ${isChecked ? "matching" : ""}`}
                             onClick={() => handleCheckboxSelect(day)}
                           >
                             {day?.dayName}- {day?.day}
@@ -823,7 +824,7 @@ export default function CartDetails() {
                       );
                     })}
                   </div>
-                  <div className="date">
+                  <div className="date row">
                     <button onClick={DatePicker} style={{ cursor: "pointer" }}>
                       Pick Date
                     </button>
@@ -837,7 +838,7 @@ export default function CartDetails() {
                         alignItems: "center",
                         height: "100vh",
                         position: "absolute",
-                        top: "29.4%",
+                        top: "16.4%",
                         left: "20%",
                         zIndex: "100",
                       }}
@@ -858,7 +859,7 @@ export default function CartDetails() {
                   <div className="text">Select the Slot</div>
 
                   <div className="date_selection">
-                    {services?.map((ele) =>
+                    {filteredServices?.map((ele) =>
                       ele.store_slots?.map((slotItem) => {
                         const isSlotSelected = selectedSlotsID?.some(
                           (ele) =>

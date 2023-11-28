@@ -7,6 +7,9 @@ import WifiCalling3Icon from "@mui/icons-material/WifiCalling3";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
+import Form from "react-bootstrap/Form";
+
+import NavDropdown from "react-bootstrap/NavDropdown";
 export default function NabarCompo() {
   const storedUserDataJSON = sessionStorage.getItem("userdata");
 
@@ -39,16 +42,12 @@ export default function NabarCompo() {
   };
 
   return (
-    <Navbar expand="lg " className="row m-0 p-0">
+    <Navbar expand="lg " bg="light" data-bs-theme="light">
       <Container>
         <Navbar.Brand className="clr fnt bg-white  rounded-lg brd p-1" href="/">
-          <img
-            src="..\assests\Screenshot_4-removebg-preview.png"
-            width={216}
-            height={36}
-          />
+          <img src="..\images\VU Care Logo.png" width={200} height={46} />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-navbar-nav wiauto" />
         <Navbar.Collapse className="justify-content-end">
           <Nav className="clr fnt me-2">
             <img
@@ -87,16 +86,16 @@ export default function NabarCompo() {
 
           {userData !== null && userData !== undefined ? (
             // Render content when userData is available
-            <Nav className="clr fnt me-2" onClick={handleShow}>
-              <Button className="text-dark" variant="outlined" size="medium">
-                <AccountCircleIcon /> {userData.customerName}
+            <Nav className="clr fnt me-2 " onClick={handleShow}>
+              <Button className="text-dark  responvm " variant="outlined" size="medium">
+                <AccountCircleIcon className="me-2" /> {userData.customerName}
               </Button>
             </Nav>
           ) : (
             // Render content for users not logged in
-            <Nav className="clr fnt">
+            <Nav className="clr fnt ">
               <Button
-                className="text-dark  me-2"
+                className="text-dark responvm m-auto  me-2"
                 variant="outlined"
                 size="medium"
                 href="/login"
@@ -104,7 +103,7 @@ export default function NabarCompo() {
                 Login
               </Button>
               <Button
-                className="text-dark  me-2"
+                className="text-dark  responvm m-auto me-2"
                 variant="outlined"
                 size="medium"
                 href="/register"

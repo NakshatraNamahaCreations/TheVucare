@@ -8,6 +8,7 @@
 .area label input {
   display: none;
 }
+
 .cit-mange {
   display: grid;
   grid-template-columns: repeat(2, auto) !important;
@@ -25,6 +26,9 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
+  background-color: rgb(237, 237, 14);
+  box-shadow: 2px 3px 5px rgb(92, 146, 92);
+  color: green;
 }
 
 .area label input:checked + span {
@@ -39,4 +43,13 @@
 
 .container_proud::-webkit-scrollbar {
   display: none;
+}
+.header_logo {
+  border: 1px solid black;
+  border-radius: 20px;
+}
+.valudwidth {
+  width: fit-content !important;
+}
+@media (max-width: 767px) {
 }

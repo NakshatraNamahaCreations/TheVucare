@@ -9,9 +9,9 @@ import axios from "axios";
 import Review from "./review";
 // import Modal from "@mui/material/Modal";
 import { Modal } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Header from "./Header";
-
+import { ColorRing } from "react-loader-spinner";
 export default function Layout() {
   const [Banner, setBanner] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -19,7 +19,7 @@ export default function Layout() {
   const [selcategory, setselcategory] = useState("");
   const [filtersub, setfiltersub] = useState([]);
   const [subModel, setsubModel] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     GetAllWebBanner();
     getAllCategory();
@@ -27,6 +27,7 @@ export default function Layout() {
 
   const GetAllWebBanner = async () => {
     try {
+      setIsLoading(true);
       let res = await axios.get(
         "http://api.thevucare.com/api/website/getallwebbanner"
       );
@@ -36,6 +37,8 @@ export default function Layout() {
       }
     } catch (er) {
       console.log(er, "err while fetching data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,21 +53,31 @@ export default function Layout() {
   }, [selcategory]);
 
   const getsubcategory = async () => {
-    let res = await axios.get(`http://api.thevucare.com/api/userapp/getappsubcat`);
-
-    if ((res.status = 200)) {
-      setCategoryData(res.data.subcategory);
-
-      setfiltersub(
-        res.data.subcategory.filter(
-          (i) => i.category?.toLowerCase() === selcategory?.toLowerCase()
-        )
+    try {
+      setIsLoading(true);
+      let res = await axios.get(
+        `http://api.thevucare.com/api/userapp/getappsubcat`
       );
+
+      if ((res.status = 200)) {
+        setCategoryData(res.data.subcategory);
+
+        setfiltersub(
+          res.data.subcategory.filter((i) =>
+            i.category?.toLowerCase().includes(selcategory?.toLowerCase())
+          )
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const getAllCategory = async () => {
     try {
+      setIsLoading(true);
       let res = await axios.get("http://api.thevucare.com/api/getcategory");
       if (res.status === 200) {
         const firstInFirstOut = res.data.category.reverse();
@@ -72,6 +85,8 @@ export default function Layout() {
       }
     } catch (er) {
       console.log(er, "err while fetching data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -188,373 +203,427 @@ export default function Layout() {
     setSelectedService(service);
   };
 
-  const phoneNumber = "9980670037";
-  const openWhatsapp = () => {
-    // Format the phone number as an international number
-    const internationalPhoneNumber = `+${phoneNumber}`;
-
-    // Create the WhatsApp link
-    const whatsappLink = `https://wa.me/${internationalPhoneNumber}`;
-
-    // Open WhatsApp in a new tab/window
-    window.open(whatsappLink, "_blank");
-  };
-
   return (
     <>
-      <div className="row m-0">
-        <Header />
-      </div>
-      <div className="container m-auto responsice-contaienr mrgn">
-        <div className="row    medis m-auto">
-          <div className="col-md-3 m-auto  responsive-categoyr1 clr2 medis1 ">
-            <div className="row responsive-categoyr1   p-2 m-1 medis1 brclr">
-              <div className="col-md-6  m-auto ">
-                <p className="row fs-5    fsd   clr3 boldt1 text-white">
-                  Our Motive Is To Make You
-                </p>
-              </div>
-              <div className="col-md-5">
-                <img
-                  className="crdbor brclr responsive-img  firstcart imgs"
-                  src="..\assests\house.avif"
-                  alt=""
-                />
-              </div>
-              <div>
-                <p className="row fs-5 p-1 mtchan  textsi fsd  clr3 boldt1 text-white">
-                  Comfort In Your Home
-                </p>
-              </div>
-              <div className="row  m-auto">
-                <button className="col-md-6 imgbr boldt1  m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
-                  Contact Us
-                </button>
-              </div>
-            </div>
+      {isLoading ? (
+        <div className="row m-auto" height={100}>
+          <div className="col-md-4"></div>
+          <div className="col-md-4">
+            {" "}
+            <ColorRing
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+            />
           </div>
-
-          {category.reverse()?.map((ele) => (
-            <div className="col-md-2 responsive-categoyr     clr2 clr3 crdbor p-3  m-auto   cursor">
-              <Link
-                className="row m-auto"
-                onClick={() => filtercatsub(ele.category)}
-              >
-                <img
-                  className="col-md-6 imgsub "
-                  width={50}
-                  height={50}
-                  categoryImg
-                  src={`http://api.thevucare.com/category/${ele?.categoryImg}`}
-                  alt=""
-                />{" "}
-              </Link>
-              <div className="row m-auto">
-                {" "}
-                <p className="col-md-12   fnt14 textsi  boldt">
-                  {ele?.category}
-                </p>
-              </div>
-            </div>
-          ))}
+          <div className="col-md-4"></div>
         </div>
-        <div className="row    mt-5 ">
-          <h2 className="text-center boldt">Just For You</h2>
-          <div className="row text-center">
-            <button className="col-md-2 m-auto btnd clr3 clr2 yellw1 p-2 boldbtn">
-              Newly Lounched
-            </button>{" "}
-          </div>
+      ) : (
+        <>
+          <Header />
 
-          <div className="row mt-3 m-auto slick-listsd ">
-            <Slider {...justforyou}>
-              {Banner.map((item) => (
-                <div key={item._id} className="m-auto">
-                  <img
-                    className="col-md-11 m-auto  responsive-brimg "
-                    width={380}
-                    height={180}
-                    src={`http://api.thevucare.com/webBanner/${item.banner}`}
-                    alt=""
-                  />
+          <div className="container ">
+            {/* <div className="row     ">
+              <div className="col-md-3   clr2  ">
+                <div className="row r  p-2 m-1  brclr">
+                  <div className="col-md-6  m-auto ">
+                    <p className="row fs-5    fsd   clr3 boldt1 text-white">
+                      Our Motive Is To Make You
+                    </p>
+                  </div>
+                  <div className="col-md-5">
+                    <img
+                      className="crdbor brclr responsive-img  firstcart imgs"
+                      src="..\assests\house.avif"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <p className="row  p-1 mtchan  textsi fsd  clr3 boldt1 text-white">
+                      Comfort In Your Home
+                    </p>
+                  </div>
+                  <div className="row  m-auto">
+                    <button className="col-md-6 imgbr boldt1  m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
+                      Contact Us
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {category.reverse()?.map((ele) => (
+                <div className="col-md-2 responsive-categoyr     clr2 clr3 crdbor p-3  m-auto   cursor">
+                  <Link
+                    className="row m-auto"
+                    onClick={() => filtercatsub(ele.category)}
+                  >
+                    <img
+                      className="col-md-6 imgsub "
+                      width={50}
+                      height={50}
+                      categoryImg
+                      src={`http://api.thevucare.com/category/${ele?.categoryImg}`}
+                      alt=""
+                    />{" "}
+                  </Link>
+                  <div className="row m-auto">
+                    {" "}
+                    <p className="col-md-12   fnt14 textsi  boldt">
+                      {ele?.category}
+                    </p>
+                  </div>
                 </div>
               ))}
-            </Slider>
-          </div>
-        </div>
-        <div className="row     mt-5 ">
-          <h2 className="text-center boldt">Pest Control</h2>
-
-          <div className="row mt-3 slick-listsd slick-listsd1">
-            <Slider {...pestControlSettings} className="slick-sliders">
-              {categoryData
-                .filter((item) =>
-                  item.category.toLowerCase().includes("control")
-                )
-                .map((item) => (
-                  <div key={item._id} className="m-auto  linksty">
+            </div> */}
+            <div className="row clr2 shadow p-5 ">
+              <div className="row   text-center m-auto  ">
+                <div className="col-md-4 p-2 brclr medis1">
+                  <p className="row   fnt22 clr3 ">
+                    Our Motive Is To Make You Comfort In Your Home{" "}
+                  </p>
+                  <div className="row  m-auto">
+                    <button className="col-md-6 imgbr boldt1  m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
+                      Contact Us
+                    </button>
+                  </div>
+                </div>
+                {category.reverse()?.map((ele) => (
+                  <div className="col-md-2 responvm">
                     <Link
-                      className="linksty"
-                      to="/servicedetails"
-                      state={{ subcategory: item?.subcategory }}
-                      key={item.subcategory}
+                      className="row m-auto linksty"
+                      onClick={() => filtercatsub(ele.category)}
                     >
-                      <img
-                        width={150}
-                        height={150}
-                        src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
-                        className=" shadow bg-white rounded "
-                        alt=""
-                      />
-                      <p className="col-md-10 text-center m-auto p-2 boldt">
-                        {item.subcategory}
-                      </p>
-                    </Link>
+                      <div className="row ">
+                        <img
+                          className="col-md-4  p-2  m-auto bg-white logostyl "
+                          width={40}
+                          height={40}
+                          src={`http://api.thevucare.com/category/${ele?.categoryImg}`}
+                          alt=""
+                        />{" "}
+                      </div>
+                      <p className=" fnt14 textsi mt-2 clr3  boldt">
+                        {ele?.category}
+                      </p>{" "}
+                    </Link>{" "}
                   </div>
                 ))}
-            </Slider>
-          </div>
-        </div>
-        <div className="row  m-auto  mt-5">
-          <Card className="borderrad">
-            <img
-              className="border1"
-              src="..\assests\pest-control-services--1536x512.jpg"
-              height={250}
-            />
-          </Card>
-        </div>
+              </div>
+            </div>
+            <div className="row ">
+              <div className="col-md-3"></div>
+            </div>
+            <div className="row    mt-5 ">
+              <h2 className="text-center boldt">Just For You</h2>
+              <div className="row text-center">
+                <button className="col-md-2 m-auto btnd clr3 clr2 yellw1 p-2 boldbtn">
+                  Newly Lounched
+                </button>{" "}
+              </div>
 
-        <div className="row  m-auto  mt-5 ">
-          <h2 className="text-center">Cleaning Services</h2>
-          <div className="row text-center">
-            <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
-              30% Less Than Market Price
-            </button>{" "}
-          </div>
-          <div className="row mt-3 slick-listsd slick-listsd1">
-            <Slider {...cleaningSettings} className="slick-sliders">
-              {categoryData
-                .filter((item) =>
-                  item.category.toLowerCase().includes("cleaning ")
-                )
-                .map((ele) => (
-                  <div key={ele._id} className="m-auto  linksty">
-                    <Link
-                      className="linksty"
-                      to="/servicedetails"
-                      state={{ subcategory: ele?.subcategory }}
-                      key={ele.subcategory}
-                    >
-                      {" "}
+              <div className="row mt-3 m-auto slick-listsd ">
+                <Slider {...justforyou}>
+                  {Banner.map((item) => (
+                    <div key={item._id} className="m-auto">
                       <img
-                        width={150}
-                        height={150}
-                        src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
-                        className="col-md-11 shadow bg-white rounded "
+                        className="col-md-11 m-auto  responsive-brimg "
+                        width={380}
+                        height={180}
+                        src={`http://api.thevucare.com/webBanner/${item.banner}`}
                         alt=""
                       />
-                      <p className="text-center m-auto p-2 boldt">
-                        {ele.subcategory}
-                      </p>
-                    </Link>
-                  </div>
-                ))}
-            </Slider>
-          </div>
-        </div>
-
-        <div className="row  m-auto  mt-5 ">
-          <h2 className="text-center boldt">Pest Control</h2>
-          <div className="row text-center">
-            <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
-              Asian Paints Certified
-            </button>{" "}
-          </div>
-          <div className="row mt-3 slick-listsd">
-            <Slider {...actualPaintingSetting} className="slick-sliders">
-              {categoryData
-                .filter((item) =>
-                  item?.category?.toLowerCase()?.includes("painting")
-                )
-                .map((item) => (
-                  <div key={item._id} className="m-auto slider-item  ">
-                    <Link
-                      className="linksty"
-                      to="/servicedetails"
-                      state={{ subcategory: item?.subcategory }}
-                      key={item.subcategory}
-                    >
-                      <img
-                        width={150}
-                        height={150}
-                        src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
-                        className="col-md-11 shadow bg-white rounded "
-                        alt=""
-                      />
-                      <p className="text-center m-auto p-2 boldt linksty">
-                        {item.subcategory}
-                      </p>
-                    </Link>
-                  </div>
-                ))}
-            </Slider>
-          </div>
-        </div>
-
-        <div className="row   m-auto  mt-5">
-          <Card className="borderrad">
-            <img className="border1" src="..\assests\ggg-01.png" />
-          </Card>
-        </div>
-
-        <Review />
-
-        <div className="row me-0  mt-5 mb-5 p-1 p-re">
-          <h2 className="text-center boldt">Why Choose Us?</h2>
-
-          <div className="container  mt-3 p-5 rdiu clr2 p-5">
-            <p className="yellw1 fs-4">Exceptional Expertise:</p>
-            <p className="clr3 fsd">
-              Our home services company boasts a team of highly skilled
-              professionals with years of experience,ensuring top-notch service
-              quality and efficient solutions for all your home needs.
-            </p>
-            <p className="yellw1 fs-4">Customer-Centric Approach:</p>
-            <p className="clr3 fsd">
-              We prioritize your satisfaction and convenience,tailoring our
-              services to your unique requirements,our dedicated team listens
-              attentively and delivers personalized solutions that align with
-              your expectations.
-            </p>
-            <p className="yellw1 fs-4">Reliability And Trust:</p>
-            <p className="clr3 fsd">
-              Count on us for dependable,trustworthy service. We value
-              transparency,punctuality.and a strong work ethic,providing peace
-              of mind knowing your home is in capable and caring hands.
-            </p>
-          </div>
-          <div className="row   m-auto p-ab p-ab-top">
-            <div className="col-md-2 responsive-brimg  m-auto p-1 text-center  rdiu2">
-              <img
-                width={50}
-                height={50}
-                src="..\assests\icons8-expert-48.png"
-              />
-              <p className="grndclr boldt ">Experts Only </p>
+                    </div>
+                  ))}
+                </Slider>
+              </div>
             </div>
-            <div className="col-md-2 responsive-brimg  m-auto  p-1 text-center rdiu2">
-              <img
-                width={50}
-                height={50}
-                src="..\assests\icons8-house-48.png"
-              />
-              <p className="grndclr boldt ">Fully Equipped </p>
+            <div className="row     mt-5 ">
+              <h2 className="text-center boldt">Pest Control</h2>
+
+              <div className="row mt-3 slick-listsd slick-listsd1">
+                <Slider {...pestControlSettings} className="slick-sliders">
+                  {categoryData
+                    .filter((item) =>
+                      item.category.toLowerCase().includes("control")
+                    )
+                    .map((item) => (
+                      <div key={item._id} className="m-auto  linksty">
+                        <Link
+                          className="linksty"
+                          to="/servicedetails"
+                          state={{ subcategory: item?.subcategory }}
+                          key={item.subcategory}
+                        >
+                          <img
+                            width={150}
+                            height={150}
+                            src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
+                            className=" shadow bg-white rounded "
+                            alt=""
+                          />
+                          <p className="col-md-10 text-center m-auto p-2 boldt">
+                            {item.subcategory}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                </Slider>
+              </div>
             </div>
-            <div className="col-md-2 responsive-brimg  m-auto text-center p-1 rdiu2">
-              <img
-                width={50}
-                height={50}
-                src="..\assests\icons8-business-team-61.png"
-              />
-              <p className="grndclr boldt ">No Subcontract </p>
+            <div className="row  m-auto  mt-5">
+              <Card className="borderrad">
+                <img
+                  className="border1"
+                  src="..\assests\pest-control-services--1536x512.jpg"
+                  height={250}
+                />
+              </Card>
+            </div>
+
+            <div className="row  m-auto  mt-5 ">
+              <h2 className="text-center">Cleaning Services</h2>
+              <div className="row text-center">
+                <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
+                  30% Less Than Market Price
+                </button>{" "}
+              </div>
+              <div className="row mt-3 slick-listsd slick-listsd1">
+                <Slider {...cleaningSettings} className="slick-sliders">
+                  {categoryData
+                    .filter((item) =>
+                      item.category.toLowerCase().includes("cleaning ")
+                    )
+                    .map((ele) => (
+                      <div key={ele._id} className="m-auto  linksty">
+                        <Link
+                          className="linksty"
+                          to="/servicedetails"
+                          state={{ subcategory: ele?.subcategory }}
+                          key={ele.subcategory}
+                        >
+                          {" "}
+                          <img
+                            width={150}
+                            height={150}
+                            src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
+                            className="col-md-11 shadow bg-white rounded "
+                            alt=""
+                          />
+                          <p className="text-center m-auto p-2 boldt">
+                            {ele.subcategory}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                </Slider>
+              </div>
+            </div>
+
+            <div className="row  m-auto  mt-5 ">
+              <h2 className="text-center boldt">Pest Control</h2>
+              <div className="row text-center">
+                <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
+                  Asian Paints Certified
+                </button>{" "}
+              </div>
+              <div className="row mt-3 slick-listsd">
+                <Slider {...actualPaintingSetting} className="slick-sliders">
+                  {categoryData
+                    .filter((item) =>
+                      item?.category?.toLowerCase()?.includes("painting")
+                    )
+                    .map((item) => (
+                      <div key={item._id} className="m-auto slider-item  ">
+                        <Link
+                          className="linksty"
+                          to="/servicedetails"
+                          state={{ subcategory: item?.subcategory }}
+                          key={item.subcategory}
+                        >
+                          <img
+                            width={150}
+                            height={150}
+                            src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
+                            className="col-md-11 shadow bg-white rounded "
+                            alt=""
+                          />
+                          <p className="text-center m-auto p-2 boldt linksty">
+                            {item.subcategory}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                </Slider>
+              </div>
+            </div>
+
+            <div className="row   m-auto  mt-5">
+              <Card className="borderrad">
+                <img className="border1" src="..\assests\ggg-01.png" />
+              </Card>
+            </div>
+
+            <Review />
+
+            <div className="row me-0  mt-5 mb-5 p-1 p-re">
+              <h2 className="text-center boldt">Why Choose Us?</h2>
+
+              <div className="container  mt-3 p-5 rdiu clr2 p-5">
+                <p className="yellw1 fs-4">Exceptional Expertise:</p>
+                <p className="clr3 fsd">
+                  Our home services company boasts a team of highly skilled
+                  professionals with years of experience,ensuring top-notch
+                  service quality and efficient solutions for all your home
+                  needs.
+                </p>
+                <p className="yellw1 fs-4">Customer-Centric Approach:</p>
+                <p className="clr3 fsd">
+                  We prioritize your satisfaction and convenience,tailoring our
+                  services to your unique requirements,our dedicated team
+                  listens attentively and delivers personalized solutions that
+                  align with your expectations.
+                </p>
+                <p className="yellw1 fs-4">Reliability And Trust:</p>
+                <p className="clr3 fsd">
+                  Count on us for dependable,trustworthy service. We value
+                  transparency,punctuality.and a strong work ethic,providing
+                  peace of mind knowing your home is in capable and caring
+                  hands.
+                </p>
+              </div>
+              <div className="row   m-auto p-ab p-ab-top">
+                <div className="col-md-2 responsive-brimg  m-auto p-1 text-center  rdiu2">
+                  <img
+                    width={50}
+                    height={50}
+                    src="..\assests\icons8-expert-48.png"
+                  />
+                  <p className="grndclr boldt ">Experts Only </p>
+                </div>
+                <div className="col-md-2 responsive-brimg  m-auto  p-1 text-center rdiu2">
+                  <img
+                    width={50}
+                    height={50}
+                    src="..\assests\icons8-house-48.png"
+                  />
+                  <p className="grndclr boldt ">Fully Equipped </p>
+                </div>
+                <div className="col-md-2 responsive-brimg  m-auto text-center p-1 rdiu2">
+                  <img
+                    width={50}
+                    height={50}
+                    src="..\assests\icons8-business-team-61.png"
+                  />
+                  <p className="grndclr boldt ">No Subcontract </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <Modal
-          open={subModel}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <div>
-            <div className="modal_wrapper select-city-modal">
-              <div className="modal_header ">
-                <div className="col-11">
+          <Modal show={subModel} onHide={handleClose} size="lg">
+            <div className="row p-4">
+              <div className="row p-2">
+                <div className="col-md-11">
                   <span>Select the subcategory</span>
                 </div>
-                <div onClick={() => setsubModel(false)}>
+                <div className="col-md-1" onClick={() => setsubModel(false)}>
                   <img
-                    width={30}
-                    height={30}
+                    width={25}
+                    height={25}
                     src="..\assests\cancel1.png"
                     alt=""
                   />
                 </div>
               </div>
-
-              <div className="modal_body">
-                <div className="modacnt ">
+              {isLoading ? (
+                <div className="col-md-2 m-auto  ">
+                  {" "}
+                  <ColorRing
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={[
+                      "#e15b64",
+                      "#f47e60",
+                      "#f8b26a",
+                      "#abbd81",
+                      "#849b87",
+                    ]}
+                  />
+                </div>
+              ) : (
+                <div className="row m-auto mt-3 justify-content-center">
                   {filtersub.map((item) => (
-                    <Link
-                      to="/servicedetails"
-                      state={{ subcategory: item?.subcategory }}
-                      key={item.subcategory}
-                    >
-                      <div className="text-align-center subcss">
+                    <div className="col-md-3  text-align-center subcss modacnt">
+                      <Link
+                        className="linksty"
+                        to="/servicedetails"
+                        state={{ subcategory: item?.subcategory }}
+                        key={item.subcategory}
+                      >
                         <img
                           src={`http://api.thevucare.com/subcat/${item.subcatimg}`}
                           width="100%"
                           height="100px"
                           alt=""
                         />
-
-                        <p className="p-1 text-black linksty">
+                        <p className="p-1 text-black linksty widthsub ">
                           {item.subcategory}
                         </p>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   ))}
                 </div>
-              </div>
+              )}
             </div>
-          </div>
-        </Modal>
-      </div>
-      <div className="row m-auto p-ab">
-        <div className="col-md-2 ms-2 p-fx p-fx-top" onClick={openWhatsapp}>
-          <img width={60} alt="" height={60} src="..\images\wicon1 (1).png" />
-        </div>
-      </div>
-      <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>What service are you looking for?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Please select the service you are interested in:</p>
-          {category.reverse()?.map((ele) => (
-            <Button
-              className="m-2"
-              variant={
-                selectedService === ele.category
-                  ? "success"
-                  : "outline-secondary"
-              }
-              onClick={() => handleServiceSelection(ele.category)}
-            >
-              {ele.category}
-            </Button>
-          ))}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            className="col-md-2"
-            variant="secondary"
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          {selectedService && (
-            <Link
-              className="col-md-2 linksty"
-              to="/servicedetails"
-              state={{ subcategory: selectedService }}
-            >
-              <Button variant="primary">Submit</Button>
-            </Link>
-          )}
-        </Modal.Footer>
-      </Modal>
+          </Modal>
+          <Modal show={showModal} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>What service are you looking for?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Please select the service you are interested in</p>
+              {category.reverse()?.map((ele) => (
+                <Form.Control
+                  readOnly
+                  className={`m-2 ${
+                    selectedService === ele.category
+                      ? "selected"
+                      : "not-selected"
+                  }`}
+                  onClick={() => handleServiceSelection(ele.category)}
+                  value={ele.category}
+                />
+              ))}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                className="col-md-2"
+                variant="secondary"
+                onClick={handleClose}
+              >
+                Close
+              </Button>
+              {selectedService && (
+                <Link
+                  className="col-md-2 linksty"
+                  to="/servicedetails"
+                  state={{ subcategory: selectedService }}
+                >
+                  <Button variant="primary">Submit</Button>
+                </Link>
+              )}
+            </Modal.Footer>
+          </Modal>
+        </>
+      )}
     </>
   );
 }

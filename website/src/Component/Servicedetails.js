@@ -128,11 +128,11 @@ function Servicedetails() {
   return (
     <>
       <NabarCompo />
-      <div className="container">
+      <div className="container mt-3">
         <div className="row">
           <div className="col-md-4">
-            <div className="row m-auto mb-5">
-              <Form.Select
+            <div className="row m-auto mb-3">
+              {/* <Form.Select
                 value={SelectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
               >
@@ -141,24 +141,22 @@ function Servicedetails() {
                     {ele.city}
                   </option>
                 ))}
-              </Form.Select>
+              </Form.Select> */}
 
-              <h4 className="text-bold mt-1">
-                {subcategory} in {SelectedCity}
-              </h4>
+              <h4 className="text-bold mt-1">{subcategory}</h4>
             </div>
             <div className="cart_item_box text-center">
               {" "}
               <div className="item_title">Sevices</div>
-              <div className="row mb-4">
+              <div className="row ">
                 {" "}
                 {icons?.map((ele) => {
                   return (
                     <div className="col-md-5 m-2 p-2 ">
                       <img
                         className="shadow rounded"
-                        width={70}
-                        height={70}
+                        width={75}
+                        height={75}
                         src={ele.img}
                         alt=""
                       />
@@ -168,23 +166,21 @@ function Servicedetails() {
               </div>
             </div>
           </div>
-          <div className="col-md-8 ">
-            <div className="row ">
+          <div className="col-md-8 m-auto ">
+            <div className="row  brd">
               {Bannerdata.length === 0 ? (
                 <img
-                  style={{ borderRadius: "20px" }}
                   alt=""
-                  className="header_logo"
+                  className="header_logo brd p-0"
                   src="../images/bnr.avif"
                   width={100}
-                  height={440}
+                  height={340}
                 />
               ) : (
                 Bannerdata.map((Ele) => (
                   <img
-                    style={{ borderRadius: "20px" }}
                     alt=""
-                    className="header_logo"
+                    className="header_logo brd p-0"
                     src={`http://api.thevucare.com/subcatwebBanner/${Ele.banner}`}
                     width={100}
                     height={440}
@@ -194,7 +190,7 @@ function Servicedetails() {
             </div>
           </div>
         </div>
-        <div className="row  mt-3">
+        <div className="row  mt-5">
           <div className="col-md-6 ">
             <div className="row container_proud">
               {serviceData?.map((service, index) => {
@@ -282,7 +278,7 @@ function Servicedetails() {
                         {service?.morepriceData?.map(
                           (moreprice, innerindex) => {
                             return (
-                              <div className="col-md-3 area">
+                              <div className="col-md-3 area valudwidth ">
                                 {moreprice?.pName && (
                                   <label
                                     htmlFor={moreprice._id}
@@ -298,11 +294,11 @@ function Servicedetails() {
                                       type="radio"
                                       name={`moreprice-${service._id}`}
                                       id={moreprice._id}
-                                      defaultChecked={innerindex === 0}
+                                      // defaultChecked={innerindex === 0}
                                       value={Price}
                                     />
-                                    <span className="col-md-1">
-                                      {moreprice?.pName?.toUpperCase()}
+                                    <span className="  ">
+                                      {moreprice?.pName}
                                     </span>
                                   </label>
                                 )}
@@ -370,10 +366,7 @@ function Servicedetails() {
             </div>
           </div>
           <div className="col-6 ">
-            <div
-              className="cart_item_box text-center "
-              style={{ marginLeft: "124px", height: "200px" }}
-            >
+            <div className="cart_item_box text-center ">
               {!PriceId && (
                 <>
                   <img
@@ -437,10 +430,7 @@ function Servicedetails() {
                 }
               })}
             </div>
-            <div
-              className="cart_item_box "
-              style={{ marginLeft: "124px", height: "200px" }}
-            >
+            <div className="cart_item_box ">
               <div className="item_title ">Vu Care</div>
               <div className="item_content">
                 <div className="left">

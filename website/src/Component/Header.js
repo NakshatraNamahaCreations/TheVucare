@@ -130,23 +130,32 @@ export default function Header() {
     },
   }));
 
+  const handleEnterKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleLinkClick();
+      console.log(event.key, "event.key");
+    }
+  };
+
   return (
-    <div className="bgimg ">
-      <NabarCompo />
-      <div className="container mt-5 ">
-        <div className="row justify-content-end">
-          <div className="col-md-6  mt-5">
-            <div className="row m-auto">
-              <h3 className="fnt  fw-bolder">
-                Ultimate Level Of Cleaning Power
-              </h3>{" "}
+    <>
+      <div className=" m-auto  bgimg ">
+        <NabarCompo />
+        <div className="container mt-5 ">
+          <div className="row justify-content-end">
+            <div className="col-md-6  mt-5">
+              <div className="row m-auto">
+                <h3 className="fnt  fw-bolder">
+                  Ultimate Level Of Cleaning Power
+                </h3>{" "}
+              </div>{" "}
             </div>{" "}
-          </div>{" "}
-        </div>
-        <div className="row   justify-content-end">
-          <div className="col-md-7 mt-5 ">
-            <div className="row inputbox">
-              {/* <div className="col-md-4  inputbox1 shadow-sm me-1   bg-white p-3  brd">
+          </div>
+          <div className="row   justify-content-end">
+            <div className="col-md-7 mt-5 ">
+              <div className="row inputbox">
+                {/* <div className="col-md-4  inputbox1 shadow-sm me-1   bg-white p-3  brd">
                 <div className="row me-3">
                   <div className="col-md-3 text-center ">
                     <img
@@ -180,113 +189,117 @@ export default function Header() {
                   </div>{" "}
                 </div>
               </div> */}
-              <div className="col-md-4">
-                <CustomInputBase
-                  className="shadow-sm me-1   bg-white"
-                  readOnly
-                  value={
-                    selectedOption.city === null ||
-                    selectedOption.city === undefined
-                      ? "Select City"
-                      : selectedOption.city
-                  }
-                  startAdornment={
-                    <img
-                      src={img}
-                      width={30}
-                      height={30}
-                      className=" imgbr custom-dropdown-toggle"
-                      alt="Flag"
-                    />
-                  }
-                  endAdornment={
-                    <svg
-                      onClick={handleResetModal}
-                      height="40"
-                      width="40"
-                      viewBox="0 0 20 20"
-                      aria-hidden="true"
-                      focusable="false"
-                      class="css-tj5bde-Svg"
-                    >
-                      <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path>
-                    </svg>
-                  }
-                />
-              </div>
-              <div className="col-md-7">
-                <CustomInputBase
-                  placeholder="Search for services"
-                  value={SearchSubCategory}
-                  defaultValue="Your Default Value Here"
-                  onChange={handleSearch}
-                  startAdornment={
-                    <Link
-                      onClick={handleLinkClick}
-                      to="/servicedetails"
-                      state={{
-                        subcategory: SearchSubCategory,
-                        SelecteddCity: selectedOption.city,
-                      }}
-                      key={SearchSubCategory}
-                      style={{ textDecoration: "none" }}
-                      className="text-decoration-none text-black"
-                    >
-                      <SearchIcon
-                        style={{ fontSize: "30px" }}
-                        onClick={handleLinkClick}
+                <div className="col-md-4">
+                  <CustomInputBase
+                    className="shadow-sm me-1   bg-white"
+                    readOnly
+                    value={
+                      selectedOption.city === null ||
+                      selectedOption.city === undefined
+                        ? "Select City"
+                        : selectedOption.city
+                    }
+                    startAdornment={
+                      <img
+                        src={img}
+                        width={30}
+                        height={30}
+                        className=" imgbr custom-dropdown-toggle"
+                        alt="Flag"
                       />
-                    </Link>
-                  }
-                />
-                {!isDropdownEnabled && (
-                  <div className="drop_dow shadow-sm p-3 mb-5 bg-white rounded">
-                    {SearchSubCategoryd?.map((ele) => (
-                      <p
-                        key={ele}
-                        onClick={() => handleSubcategorySelect(ele)}
-                        style={{ cursor: "pointer" }}
+                    }
+                    endAdornment={
+                      <svg
+                        onClick={handleResetModal}
+                        height="40"
+                        width="40"
+                        viewBox="0 0 20 20"
+                        aria-hidden="true"
+                        focusable="false"
+                        class="css-tj5bde-Svg"
                       >
-                        {ele}
-                      </p>
-                    ))}
-                  </div>
-                )}
+                        <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path>
+                      </svg>
+                    }
+                  />
+                </div>
+                <div className="col-md-7 responvm">
+                  <input
+                    placeholder="Search for services"
+                    value={SearchSubCategory}
+                    defaultValue="Your Default Value Here"
+                    onChange={(event) => {
+                      handleSearch(event);
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        handleLinkClick();
+                        console.log(event.key, "event.key");
+                      }
+                    }}
+                    type="search"
+                    startAdornment={
+                      <Link
+                        to="/servicedetails"
+                        state={{
+                          subcategory: SearchSubCategory,
+                          SelecteddCity: selectedOption.city,
+                        }}
+                        key={SearchSubCategory}
+                        style={{ textDecoration: "none" }}
+                        className="text-decoration-none text-black"
+                      ></Link>
+                    }
+                  />
+
+                  {!isDropdownEnabled && (
+                    <div className="drop_dow shadow-sm p-3 mb-5 bg-white rounded">
+                      {SearchSubCategoryd?.map((ele) => (
+                        <p
+                          key={ele}
+                          onClick={() => handleSubcategorySelect(ele)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {ele}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <Modal open={openResetModal} onClose={handleResetModal}>
-        <div className="modal_wrapper select-city-modal">
-          <div className="modal_header ">
-            <div className="col-12">
-              <span>Let's choose</span>
-              <p>Your Location</p>
+        <Modal open={openResetModal} onClose={handleResetModal}>
+          <div className="modal_wrapper select-city-modal">
+            <div className="modal_header ">
+              <div className="col-12">
+                <span>Let's choose</span>
+                <p>Your Location</p>
+              </div>
             </div>
-          </div>
 
-          <div className="modal_body">
-            <div className="title text-center">India</div>
-            <div className="row">
-              {city.map((city) => {
-                return (
-                  <div className="col-lg-2 col-md-3 col-sm-4">
-                    <div
-                      className="city-name"
-                      onClick={() => handleChange(city)}
-                    >
-                      <img src="" alt="" />
+            <div className="modal_body">
+              <div className="title text-center">India</div>
+              <div className="row">
+                {city.map((city) => {
+                  return (
+                    <div className="col-lg-2 col-md-3 col-sm-4">
+                      <div
+                        className="city-name"
+                        onClick={() => handleChange(city)}
+                      >
+                        <img src="" alt="" />
 
-                      <p className="p-1">{city.city}</p>
+                        <p className="p-1">{city.city}</p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
-    </div>
+        </Modal>
+      </div>
+    </>
   );
 }

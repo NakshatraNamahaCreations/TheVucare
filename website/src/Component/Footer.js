@@ -4,6 +4,13 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 // import InstagramIcon from "@mui/icons-material/Instagram";
 export default function Footer() {
+  const phoneNumber = "9980670037";
+  const openWhatsapp = () => {
+    const internationalPhoneNumber = `+${phoneNumber}`;
+    const whatsappLink = `https://wa.me/${internationalPhoneNumber}`;
+    window.open(whatsappLink, "_blank");
+  };
+
   return (
     <>
       <div className="row mt-5 bg-dark text-white m-auto ">
@@ -84,6 +91,18 @@ export default function Footer() {
                 />
               </a>
             </div>
+          </div>
+        </div>
+        <div className="row m-auto p-ab">
+          <div className="col-md-1  p-fx p-fx-top " onClick={openWhatsapp}>
+            {" "}
+            <img
+              className="logostyl shadow-sm"
+              width={80}
+              alt=""
+              height={80}
+              src="..\images\wicon1 (1).png"
+            />
           </div>
         </div>
       </div>
