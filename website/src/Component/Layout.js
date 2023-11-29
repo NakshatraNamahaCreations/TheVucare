@@ -12,6 +12,7 @@ import { Modal } from "react-bootstrap";
 import { Button, Form } from "react-bootstrap";
 import Header from "./Header";
 import { ColorRing } from "react-loader-spinner";
+
 export default function Layout() {
   const [Banner, setBanner] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -20,6 +21,14 @@ export default function Layout() {
   const [filtersub, setfiltersub] = useState([]);
   const [subModel, setsubModel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const storedUserDataJSON = sessionStorage.getItem("userdata");
+  let userData = null;
+  try {
+    userData = JSON.parse(storedUserDataJSON);
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+  }
+  console.log("userData", userData);
   useEffect(() => {
     GetAllWebBanner();
     getAllCategory();
@@ -109,6 +118,7 @@ export default function Layout() {
   const painitnca = Math.min(paintingcontorl, 6);
 
   const commonSliderSettings = {
+    className: "common-slider",
     dots: true,
     infinite: true,
     speed: 900,
@@ -116,31 +126,29 @@ export default function Layout() {
     autoplay: true,
     autoplaySpeed: 3000,
     cssEase: "ease-in-out",
-    initialSlide: 0,
+    initialSlide: 1,
     responsive: [
       {
         breakpoint: 800,
         settings: {
           slidesToShow: 2,
+          adaptiveHeight: true,
+          centerMode: true,
+          dots: true,
+          arrows: true,
+          lazyLoad: "ondemand",
         },
-        adaptiveHeight: true,
-        centerMode: true,
-        variableWidth: true,
-        dots: true,
-        arrows: true,
-        azyLoad: "ondemand",
       },
       {
         breakpoint: 767,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
+          adaptiveHeight: true,
+          centerMode: true,
+          dots: true,
+          arrows: true,
+          lazyLoad: "ondemand",
         },
-        adaptiveHeight: true,
-        centerMode: true,
-        variableWidth: true,
-        dots: true,
-        arrows: true,
-        azyLoad: "ondemand",
       },
     ],
   };
@@ -161,6 +169,7 @@ export default function Layout() {
   };
 
   const justforyou = {
+    className: "just-for-you-slider",
     dots: true,
     infinite: true,
     speed: 900,
@@ -169,6 +178,34 @@ export default function Layout() {
     autoplay: true,
     autoplaySpeed: 3000,
     cssEase: "ease-in-out",
+    responsive: [
+      {
+        breakpoint: 800,
+        settings: {
+          slidesToShow: 2,
+          adaptiveHeight: true,
+          centerMode: true,
+          variableWidth: 6,
+          dots: true,
+          arrows: true,
+          lazyLoad: "ondemand",
+          mobileOverlap: true,
+        },
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 2,
+          adaptiveHeight: true,
+          centerMode: true,
+          variableWidth: 6,
+          dots: true,
+          arrows: true,
+          lazyLoad: "ondemand",
+          mobileOverlap: true,
+        },
+      },
+    ],
   };
   const [showModal, setShowModal] = useState(false);
 
@@ -203,6 +240,19 @@ export default function Layout() {
     setSelectedService(service);
   };
 
+  let UserContct = userData?.mainContact;
+
+  const sendWhatsAppMessage = (recipient, service) => {
+    const apiEndpoint = "https://api.whatsapp.com/send";
+    const message = `Selected Service: ${service}`;
+    const whatsappLink = `${apiEndpoint}?phone=${recipient}&text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappLink, "_blank");
+  };
+  const handleSubmit = () => {
+    sendWhatsAppMessage("9980670037", selectedService);
+  };
   return (
     <>
       {isLoading ? (
@@ -325,7 +375,7 @@ export default function Layout() {
                 </button>{" "}
               </div>
 
-              <div className="row mt-3 m-auto slick-listsd ">
+              <div className="row mt-3 m-auto slick-listsd just-for-you-slider">
                 <Slider {...justforyou}>
                   {Banner.map((item) => (
                     <div key={item._id} className="m-auto">
@@ -344,8 +394,8 @@ export default function Layout() {
             <div className="row  m-auto   mt-5 ">
               <h2 className="text-center boldt">Pest Control</h2>
 
-              <div className="row mt-3 slick-listsd slick-listsd1">
-                <Slider {...pestControlSettings} className="slick-sliders">
+              <div className="row mt-3 slick-listsd slick-listsd1 slick-sliders common-slider">
+                <Slider {...pestControlSettings}>
                   {categoryData
                     .filter((item) =>
                       item.category.toLowerCase().includes("control")
@@ -362,10 +412,10 @@ export default function Layout() {
                             width={150}
                             height={150}
                             src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
-                            className=" shadow bg-white rounded "
+                            className=" m-1 shadow bg-white rounded "
                             alt=""
                           />
-                          <p className="col-md-10 text-center m-auto p-2 boldt">
+                          <p className="col-md-11 m-1 text-center m-auto p-2 boldt">
                             {item.subcategory}
                           </p>
                         </Link>
@@ -391,8 +441,8 @@ export default function Layout() {
                   30% Less Than Market Price
                 </button>{" "}
               </div>
-              <div className="row mt-3 slick-listsd slick-listsd1">
-                <Slider {...cleaningSettings} className="slick-sliders">
+              <div className="row mt-5 slick-listsd slick-listsd1 slick-sliders common-slider">
+                <Slider {...cleaningSettings}>
                   {categoryData
                     .filter((item) =>
                       item.category.toLowerCase().includes("cleaning ")
@@ -410,7 +460,46 @@ export default function Layout() {
                             width={150}
                             height={150}
                             src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
-                            className="col-md-11 shadow bg-white rounded "
+                            className=" m-1  shadow bg-white rounded "
+                            alt=""
+                          />
+                          <p className="col-md-11 m-1 text-center m-auto p-2 boldt">
+                            {ele.subcategory}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                </Slider>
+              </div>
+            </div>
+
+            <div className="row m-auto   mt-5 ">
+              <h2 className="text-center">Painting Services</h2>
+              <div className="row text-center">
+                <button className="col-md-3 m-auto btnd btns_all clr3 clr2 p-2 yellw1 boldbtn">
+                  Asian Paints Certified
+                </button>{" "}
+              </div>
+              <div className="row mt-5 slick-listsd slick-listsd1 slick-sliders common-slider">
+                <Slider {...actualPaintingSetting}>
+                  {categoryData
+                    .filter((item) =>
+                      item.category.toLowerCase().includes("painting")
+                    )
+                    .map((ele) => (
+                      <div key={ele._id} className="m-auto  linksty">
+                        <Link
+                          className="linksty"
+                          to="/servicedetails"
+                          state={{ subcategory: ele?.subcategory }}
+                          key={ele.subcategory}
+                        >
+                          {" "}
+                          <img
+                            width={150}
+                            height={150}
+                            src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
+                            className=" m-1 shadow bg-white rounded "
                             alt=""
                           />
                           <p className="text-center m-auto p-2 boldt">
@@ -422,45 +511,6 @@ export default function Layout() {
                 </Slider>
               </div>
             </div>
-
-            <div className="row  m-auto  mt-5 ">
-              <h2 className="text-center boldt">Painting </h2>
-              <div className="row text-center">
-                <button className="col-md-3 m-auto btns_all btnd clr3 clr2 p-2 yellw1 boldbtn">
-                  Asian Paints Certified
-                </button>{" "}
-              </div>
-              <div className="row mt-3 slick-listsd">
-                <Slider {...actualPaintingSetting} className="slick-sliders">
-                  {categoryData
-                    .filter((item) =>
-                      item?.category?.toLowerCase()?.includes("painting")
-                    )
-                    .map((item) => (
-                      <div key={item._id} className="m-auto slider-item  ">
-                        <Link
-                          className="linksty"
-                          to="/servicedetails"
-                          state={{ subcategory: item?.subcategory }}
-                          key={item.subcategory}
-                        >
-                          <img
-                            width={150}
-                            height={150}
-                            src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
-                            className="col-md-11 shadow bg-white rounded "
-                            alt=""
-                          />
-                          <p className="text-center m-auto p-2 boldt linksty">
-                            {item.subcategory}
-                          </p>
-                        </Link>
-                      </div>
-                    ))}
-                </Slider>
-              </div>
-            </div>
-
             <div className="row   m-auto  mt-5">
               <Card className="borderrad">
                 <img className="border1" src="..\assests\ggg-01.png" />
@@ -569,6 +619,7 @@ export default function Layout() {
                         key={item.subcategory}
                       >
                         <img
+                          className="mt-2 brd"
                           src={`http://api.thevucare.com/subcat/${item.subcatimg}`}
                           width="100%"
                           height="100px"
@@ -612,13 +663,9 @@ export default function Layout() {
                 Close
               </Button>
               {selectedService && (
-                <Link
-                  className="col-md-2 linksty"
-                  to="/servicedetails"
-                  state={{ subcategory: selectedService }}
-                >
-                  <Button variant="primary">Submit</Button>
-                </Link>
+                <Button variant="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
               )}
             </Modal.Footer>
           </Modal>

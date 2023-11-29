@@ -8,6 +8,7 @@ import Modal from "@mui/material/Modal";
 // import  "../Pages/ViewCart/Components/cartdetails.scss"
 // import ViewCart from "../Pages/ViewCart/ViewCart";
 import "../Component/Servicedetails.css";
+import "../Component/layout.css"
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import PeopleIcon from "@mui/icons-material/People";
@@ -43,15 +44,14 @@ function Servicedetails() {
         "http://api.thevucare.com/api/userapp/getservices"
       );
       if (res.status === 200) {
-        setserviceData(res.data.service);
-        let subcategory = Item?.category?.toLowerCase();
+        let subcategor = subcategory.toLowerCase();
+        let serviceData = res.data.service.filter((ele) => {
+          let subcat = ele.Subcategory.toLowerCase();
 
-        setfiltersub(
-          res?.data?.subcategory?.filter((ele) => {
-            let category = ele?.category?.toLowerCase();
-            return category.includes(subcategory);
-          })
-        );
+          return subcategor.includes(subcat);
+        });
+
+        setserviceData(serviceData);
       }
     } catch (er) {
       console.log(er, "err while fetching data");
@@ -85,8 +85,6 @@ function Servicedetails() {
     setServiceIDD(sersid);
     setPrices(filteredData);
     setPriceId(hr);
-    console.log("sersid", sersid);
-    console.log("hr", hr);
   };
 
   useEffect(() => {
@@ -101,9 +99,9 @@ function Servicedetails() {
       setServiceID(allServiceIDs);
     }
   }, [serviceData]);
-  const handleAdd = (state) => {
-    console.log(state, "state");
-  };
+  // const handleAdd = (state) => {
+  //   console.log(state, "state");
+  // };
 
   const getbannerimg = async () => {
     let res = await axios.get(
@@ -117,6 +115,13 @@ function Servicedetails() {
       // console.log(res.data?.subcategoyrbanner);
     }
   };
+  const storedUserDataJSON = sessionStorage.getItem("userdata");
+  let userData = null;
+  try {
+    userData = JSON.parse(storedUserDataJSON);
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+  }
 
   const icons = [
     { img: "../images/pesticon.png" },
@@ -125,12 +130,61 @@ function Servicedetails() {
     { img: "../images/icons8-garden-94.png" },
   ];
 
+  const sendWhatsAppMessage = (PriceId, service) => {
+    let Data = serviceData
+      ?.flatMap((ele) =>
+        ele.morepriceData
+          .filter((priceData) => priceData._id === PriceId)
+          .map((priceData) => ({
+            serviceImg: ele.serviceImg,
+            serviceName: ele.serviceName,
+            pName: priceData.pName,
+          }))
+      )
+      .filter(Boolean);
+
+    if (Data.length > 0) {
+      const apiEndpoint = "https://api.whatsapp.com/send";
+
+      const recipientString = String("9980670037");
+
+      const defaultCountryCode = "+91";
+
+      const fullRecipient = recipientString.startsWith("+")
+        ? recipientString
+        : defaultCountryCode + recipientString;
+
+      const message = `
+        Hi there!
+        I'm interested in learning more about the service you offer.
+        Could you please provide additional details?
+        Service Details:
+        - Service Name: ${Data[0].serviceName}
+        - Selected Plan: ${Data[0].pName}
+        - Customer Name: ${userData.customerName}
+        
+        Thank you!
+        `;
+
+      console.log(message);
+
+      const whatsappLink = `${apiEndpoint}?phone=${encodeURIComponent(
+        fullRecipient
+      )}&text=${encodeURIComponent(message)}`;
+      window.open(whatsappLink, "_blank");
+    } else {
+      console.error("No data found for the given PriceId");
+    }
+  };
+
   return (
     <>
       <NabarCompo />
       <div className="container mt-3">
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-6">
+
+
             <div className="row m-auto mb-3">
               {/* <Form.Select
                 value={SelectedCity}
@@ -166,8 +220,9 @@ function Servicedetails() {
               </div>
             </div>
           </div>
-          <div className="col-md-8 m-auto ">
-            <div className="row  brd">
+          <div className="col-md-1"></div>
+          <div className="col-md-5 ">
+            <div className="row mt-3  brd">
               {Bannerdata.length === 0 ? (
                 <img
                   alt=""
@@ -183,7 +238,7 @@ function Servicedetails() {
                     className="header_logo brd p-0"
                     src={`http://api.thevucare.com/subcatwebBanner/${Ele.banner}`}
                     width={100}
-                    height={440}
+                    height={320}
                   />
                 ))
               )}{" "}
@@ -191,182 +246,183 @@ function Servicedetails() {
           </div>
         </div>
         <div className="row  mt-5">
-          <div className="col-md-6 ">
+          <div className="col-md-6 data_container">
             <div className="row container_proud">
-              {serviceData?.map((service, index) => {
-                return (
-                  <div className="row mt-5">
-                    <div className="col-8">
-                      <h3>{service.serviceName}</h3>
-
-                      <div className="d-flex mt-3">
-                        <span className="me-3">{service.serviceHour}</span>
-                        <p style={{ color: "black", fontWeight: "bold" }}>
-                          Start price
-                        </p>
-                        {Price && Price.length > 0
-                          ? Price.flatMap((ele, priceIndex) => {
-                              if (
-                                ServiceIDD === service._id &&
-                                ele._id === PriceId
-                              ) {
-                                return (
-                                  <div className="row" key={ele._id}>
-                                    <p
-                                      className="col-md-4 mx-2 price"
-                                      style={{
-                                        textDecorationLine: "line-through",
-                                        color: "grey",
-                                      }}
-                                    >
-                                      ₹{ele?.pPrice}
-                                    </p>
-                                    <p
-                                      className="col-md-4"
-                                      style={{
-                                        color: "black",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      ₹{ele?.pofferprice}
-                                    </p>
-                                  </div>
-                                );
-                              }
-                            })
-                          : ServiceID?.map((ele) => {
-                              if (ele === service._id) {
-                                return DefaultPrice?.map((price) => {
-                                  if (service?.morepriceData) {
-                                    const filteredData =
-                                      service.morepriceData.find(
-                                        (data) => data._id === price?._id
-                                      );
-
-                                    if (filteredData) {
-                                      return (
-                                        <div className="row" key={ele._id}>
+              {!serviceData || serviceData.length === 0 ? (
+                <div className="row mt-5">
+                  <div className="col-md-4"></div>
+                  <div className="col-md-4">Serivces Not available</div>
+                  <div className="col-md-4"></div>
+                </div>
+              ) : (
+                serviceData?.map((service, index) => {
+                  return (
+                    <div className="row mt-5">
+                      <div className="col-8">
+                        <h3>{service.serviceName}</h3>
+                        {service?.serviceHour ? (
+                          <span className="me-3">
+                            Service Hour {service?.serviceHour}
+                          </span>
+                        ) : null}
+                        <div className="row d-flex mt-3">
+                          <p style={{ color: "black", fontWeight: "bold" }}>
+                            Start price
+                          </p>
+                          {Price && Price.length > 0
+                            ? Price.flatMap((ele, priceIndex) => {
+                                if (
+                                  ServiceIDD === service._id &&
+                                  ele._id === PriceId
+                                ) {
+                                  return (
+                                    <div className="row" key={ele._id}>
+                                      {ele?.pofferprice?.includes(
+                                        "contact" ||
+                                          ele?.pPrice?.includes("contact")
+                                      ) ? (
+                                        <p className="text-green">
+                                          Please Contact For Price
+                                        </p>
+                                      ) : (
+                                        <>
                                           <p
-                                            className="col-md-4 mx-2 price"
+                                            className="col-md-5 mx-2 price"
                                             style={{
                                               textDecorationLine:
                                                 "line-through",
                                               color: "grey",
                                             }}
                                           >
-                                            ₹{filteredData?.pPrice}
+                                            Rs. {ele?.pPrice}
                                           </p>
                                           <p
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
-                                              color: "black",
+                                              color: "#03b162",
                                               fontWeight: "bold",
                                             }}
                                           >
-                                            ₹{filteredData?.pofferprice}
+                                            Rs. {ele?.pofferprice}
                                           </p>
-                                        </div>
-                                      );
+                                        </>
+                                      )}
+                                    </div>
+                                  );
+                                }
+                              })
+                            : ServiceID?.map((ele) => {
+                                if (ele === service._id) {
+                                  return DefaultPrice?.map((price) => {
+                                    if (service?.morepriceData) {
+                                      const filteredData =
+                                        service.morepriceData.find(
+                                          (data) => data._id === price?._id
+                                        );
+
+                                      if (filteredData) {
+                                        return (
+                                          <div className="row" key={ele._id}>
+                                            {filteredData?.pofferprice?.includes(
+                                              "contact" ||
+                                                filteredData?.pPrice?.includes(
+                                                  "contact"
+                                                )
+                                            ) ? (
+                                              <p>Contact For Price</p>
+                                            ) : (
+                                              <>
+                                                <p
+                                                  className="col-md-4 mx-2 price"
+                                                  style={{
+                                                    textDecorationLine:
+                                                      "line-through",
+                                                    color: "grey",
+                                                  }}
+                                                >
+                                                  Rs. {filteredData?.pPrice}
+                                                </p>
+                                                <p
+                                                  className="col-md-4"
+                                                  style={{
+                                                    color: "#03b162",
+                                                    fontWeight: "bold",
+                                                  }}
+                                                >
+                                                  Rs.{" "}
+                                                  {filteredData?.pofferprice}
+                                                </p>
+                                              </>
+                                            )}
+                                          </div>
+                                        );
+                                      }
                                     }
-                                  }
-                                });
-                              }
-                            })}
+                                  });
+                                }
+                              })}
+                        </div>
+
+                        <div className="row">
+                          {service?.morepriceData?.map(
+                            (moreprice, innerindex) => {
+                              return (
+                                <div className="col-md-3 area valudwidth ">
+                                  {moreprice?.pName && (
+                                    <label
+                                      htmlFor={moreprice._id}
+                                      key={moreprice._id}
+                                      onClick={() =>
+                                        handleHrSelect(
+                                          service._id,
+                                          moreprice?._id
+                                        )
+                                      }
+                                    >
+                                      <input
+                                        type="radio"
+                                        name={`moreprice-${service._id}`}
+                                        id={moreprice._id}
+                                        // defaultChecked={innerindex === 0}
+                                        value={Price}
+                                      />
+                                      <span className="  ">
+                                        {moreprice?.pName}
+                                      </span>
+                                    </label>
+                                  )}
+                                </div>
+                              );
+                            }
+                          )}
+                        </div>
+                        <p
+                          style={{ color: "#03b162" }}
+                          onClick={() => handlebookclick(service)}
+                        >
+                          View details
+                        </p>
                       </div>
 
-                      <div className="row">
-                        {service?.morepriceData?.map(
-                          (moreprice, innerindex) => {
-                            return (
-                              <div className="col-md-3 area valudwidth ">
-                                {moreprice?.pName && (
-                                  <label
-                                    htmlFor={moreprice._id}
-                                    key={moreprice._id}
-                                    onClick={() =>
-                                      handleHrSelect(
-                                        service._id,
-                                        moreprice?._id
-                                      )
-                                    }
-                                  >
-                                    <input
-                                      type="radio"
-                                      name={`moreprice-${service._id}`}
-                                      id={moreprice._id}
-                                      // defaultChecked={innerindex === 0}
-                                      value={Price}
-                                    />
-                                    <span className="  ">
-                                      {moreprice?.pName}
-                                    </span>
-                                  </label>
-                                )}
-                              </div>
-                            );
-                          }
-                        )}
+                      <div className="col-md-4 m-auto">
+                        <img
+                          width={200}
+                          className="row  header_logo"
+                          height={150}
+                          src={`http://api.thevucare.com/service/${service?.serviceImg}`}
+                          alt=""
+                        />
                       </div>
-                      <p
-                        style={{ color: "green" }}
-                        onClick={() => handlebookclick(service)}
-                      >
-                        View details
-                      </p>
+                      <hr />
                     </div>
-
-                    <div className="col-md-4">
-                      <img
-                        width={300}
-                        className="row m-auto"
-                        height={200}
-                        src={`http://api.thevucare.com/service/${service?.serviceImg}`}
-                        alt=""
-                        style={{ borderRadius: "10px" }}
-                      />
-                      {PriceId !== null &&
-                        PriceId !== undefined &&
-                        service._id === ServiceIDD && (
-                          <div
-                            className="m-auto text-center p-2"
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Link
-                              to="/viewcart"
-                              state={{
-                                passseviceid: service._id,
-                                bhk: PriceId,
-                                selectecity: SelectedCity,
-                              }}
-                              key={service.serviceName}
-                              style={{ textDecoration: "none" }}
-                            >
-                              <button
-                                style={{
-                                  width: "100px",
-                                  padding: "8px",
-                                  background: "gold",
-                                  color: "green",
-                                }}
-                              >
-                                Add <AddIcon />
-                              </button>
-                            </Link>
-                          </div>
-                        )}
-                    </div>
-                    <hr />
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
-          <div className="col-6 ">
-            <div className="cart_item_box text-center ">
+          <div className="col-md-1"></div>
+          <div className="col-5 ">
+            <div className=" cart_item_box cart_item_box1 text-center ">
               {!PriceId && (
                 <>
                   <img
@@ -384,11 +440,13 @@ function Servicedetails() {
                   return (
                     <>
                       <div className="item_title">{ele?.serviceName}</div>
-                      <div className="item_content">
-                        <div className="left">
+                      <div className="item_content row m-auto">
+                        <div className="col-md-4 m-auto left">
                           <div className="left_img">
                             <img
-                              className="row"
+                              className=""
+                              width={300}
+                              height={300}
                               src={`http://api.thevucare.com/service/${ele?.serviceImg}`}
                               alt=""
                             />
@@ -405,32 +463,105 @@ function Servicedetails() {
                               ))}
                           </div>
                         </div>
-                        <div className="col-md-5">
-                          {/* <div className="row right"> */}
+                        <div className="col-md-7 m-auto">
                           {ele.morepriceData
                             .filter((item) => item?._id === PriceId)
 
                             .map((filteredElement) => (
                               <div className="row   ">
-                                <span className="col-md-6 m-auto wrong_price ">
-                                  {filteredElement?.pPrice && "Rs."}{" "}
-                                  {filteredElement?.pPrice}
-                                </span>
-                                <span className="col-md-6 m-auto real_price">
-                                  {filteredElement?.pPrice && "Rs."}{" "}
-                                  {filteredElement?.pofferprice}
-                                </span>
+                                {filteredElement?.pofferprice?.includes(
+                                  "contact" ||
+                                    filteredElement?.pPrice?.includes("contact")
+                                ) ? (
+                                  <p>Contact For Price</p>
+                                ) : (
+                                  <>
+                                    <span className="col-md-6 m-auto wrong_price ">
+                                      {filteredElement?.pPrice && "Rs."}{" "}
+                                      {filteredElement?.pPrice}
+                                    </span>
+                                    <span className="col-md-6 m-auto real_price wrong_price">
+                                      {filteredElement?.pPrice && "Rs."}{" "}
+                                      {filteredElement?.pofferprice}
+                                    </span>
+                                  </>
+                                )}
                               </div>
                             ))}
-                          {/* </div> */}
                         </div>
                       </div>
+
+                      {ele.morepriceData
+                        .filter((item) => item?._id === PriceId)
+
+                        .map((filteredElement) => (
+                          <div className="row   ">
+                            {filteredElement?.pofferprice?.includes(
+                              "contact" ||
+                                filteredElement?.pPrice?.includes("contact")
+                            ) ? (
+                              <div className="row  m-2">
+                                <button
+                                  onClick={() =>
+                                    sendWhatsAppMessage(filteredElement._id)
+                                  }
+                                  className="col-md-6 m-auto"
+                                  style={{
+                                    padding: "8px",
+                                    background: "gold",
+                                    color: "#03b162",
+                                  }}
+                                >
+                                  Enquire Now
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                {PriceId !== null &&
+                                  PriceId !== undefined &&
+                                  ele._id === ServiceIDD && (
+                                    <div
+                                      className="m-auto text-center p-2"
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <Link
+                                        to="/viewcart"
+                                        state={{
+                                          passseviceid: ele._id,
+                                          bhk: PriceId,
+                                          selectecity: SelectedCity,
+                                        }}
+                                        key={ele.serviceName}
+                                        style={{ textDecoration: "none" }}
+                                      >
+                                        <button
+                                          style={{
+                                            width: "300px",
+                                            padding: "8px",
+                                            background: "gold",
+                                            color: "#03b162",
+                                          }}
+                                        >
+                                          Continue
+                                          {/* <AddIcon /> */}
+                                        </button>
+                                      </Link>
+                                    </div>
+                                  )}
+                              </>
+                            )}
+                          </div>
+                        ))}
                     </>
                   );
                 }
               })}
             </div>
-            <div className="cart_item_box ">
+            <div className=" cart_item_box  cart_item_box1">
               <div className="item_title ">Vu Care</div>
               <div className="item_content">
                 <div className="left">
@@ -486,49 +617,98 @@ function Servicedetails() {
                 />
               </div>
             </div>
-            <h3 className="text-center">{Item?.Subcategory}</h3>
-            <div className="row modal_body">
-              <div className="col-md-2"></div>
-              <div className="col-md-8 m-auto">
-                <img
-                  className="m-auto"
-                  style={{ borderRadius: "20px" }}
-                  src={`http://api.thevucare.com/service/${Item?.serviceImg}`}
-                  alt=""
-                  width={300}
-                  height={200}
-                />
-                <div className="row">
-                  <p className="row m-auto">{Item?.serviceName}</p>
-                  <p className="col-md-6">
+            <h3 className="text-center">{Item?.serviceName}</h3>
+
+            <div className="row modal_body ">
+              <div className="col-md-11 m-auto header_logo p-2">
+                <div className="row m-auto text-center ">
+                  <img
+                    className="col-md-5 m-auto p-0 mt-2 header_logo"
+                    src={`http://api.thevucare.com/service/${Item?.serviceImg}`}
+                    alt=""
+                    // width={200}
+                    height={200}
+                  />
+                </div>
+                <div className="row mt-2 ">
+                  <p className="col-md-5 ">
                     No Of Service Hour {Item?.serviceHour}{" "}
                     <AccessTimeIcon style={{ color: "grey" }} />
                   </p>
-                  <p className="col-md-6">
+                  <p className="col-md-5 ">
                     No of Service Man {Item?.NofServiceman}{" "}
                     <PeopleIcon style={{ color: "grey" }} />
                   </p>
 
-                  <p className="p-1" style={{ color: "black" }}>
-                    {Item?.subcategory}
-                  </p>
-                </div>
-                <ul
-                  style={{ fontSize: 15 }}
-                  numberOfLines={4}
-                  ellipsizeMode="tail"
-                >
-                  {Item?.serviceDesc?.map((Ele) => (
-                    <li>{Ele?.text}</li>
+                  {Item?.morepriceData?.map((Ele) => (
+                    <div className="row ">
+                      <div className="col-md-3 p-2  area valudwidth ">
+                        {Ele?.pName && (
+                          <label
+                            htmlFor={Ele._id}
+                            key={Ele._id}
+                            onClick={() => handleHrSelect(Ele._id, Ele?._id)}
+                          >
+                            <input
+                              type="radio"
+                              name={`Ele-${Ele._id}`}
+                              id={Ele._id}
+                              // defaultChecked={innerindex === 0}
+                              value={Price}
+                            />
+                            <span className="  ">{Ele?.pName}</span>
+                          </label>
+                        )}
+                      </div>
+
+                      {Ele?.pofferprice?.includes(
+                        "contact" || Ele?.pPrice?.includes("contact")
+                      ) ? (
+                        <p>Contact For Price</p>
+                      ) : (
+                        <>
+                          {" "}
+                          <p
+                            className="col-md-3 m-0 valudwidth m-auto"
+                            style={{
+                              textDecorationLine: "line-through",
+                              color: "grey",
+                            }}
+                          >
+                            Rs. {Ele.pPrice}
+                          </p>
+                          <p
+                            className="col-md-3 m-0 valudwidth m-auto"
+                            style={{
+                              color: "#03b162",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Rs. {Ele.pofferprice}
+                          </p>{" "}
+                        </>
+                      )}
+                    </div>
                   ))}
-                  {console.log(Item, "item")}
-                </ul>
+                </div>
+
+                {Item?.serviceDesc?.map((Ele, index) => (
+                  <span key={index}>
+                    {Ele?.text.split("\n").map((line, lineIndex) => (
+                      <p key={lineIndex}>
+                        {line.startsWith("*") ? line : `* ${line}`}
+                      </p>
+                    ))}
+                  </span>
+                ))}
               </div>
-              <div className="col-md-2"></div>
             </div>
           </div>
         </div>
       </Modal>
+
+
+
     </>
   );
 }

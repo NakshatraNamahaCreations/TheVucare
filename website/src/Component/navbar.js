@@ -31,13 +31,8 @@ export default function NabarCompo() {
 
   const phoneNumber = "9980670037";
   const openWhatsapp = () => {
-    // Format the phone number as an international number
     const internationalPhoneNumber = `+${phoneNumber}`;
-
-    // Create the WhatsApp link
     const whatsappLink = `https://wa.me/${internationalPhoneNumber}`;
-
-    // Open WhatsApp in a new tab/window
     window.open(whatsappLink, "_blank");
   };
 
@@ -55,8 +50,8 @@ export default function NabarCompo() {
               className="cursor-pointer"
               onClick={openWhatsapp}
               src="..\images\wicon1 (1).png"
-              width={40}
-              height={40}
+              width={50}
+              height={50}
             />
           </Nav>
           <Nav className="clr fnt me-2">
@@ -71,7 +66,7 @@ export default function NabarCompo() {
             </a>
           </Nav>
           <Nav className="clr fnt me-2">
-            <img alt="" src="..\images\wicon1 (3).png" width={40} height={40} />
+            <img alt="" src="..\images\wicon1 (3).png" width={50} height={50} />
           </Nav>
           <Nav className="clr fnt me-2">
             <a href={`tel:${phoneNumber}`} className="text-decoration-none">
@@ -85,17 +80,19 @@ export default function NabarCompo() {
           </Nav>
 
           {userData !== null && userData !== undefined ? (
-            // Render content when userData is available
             <Nav className="clr fnt me-2 " onClick={handleShow}>
-              <Button className="text-dark  responvm " variant="outlined" size="medium">
+              <Button
+                className="text-dark  responvm "
+                variant="outlined"
+                size="medium"
+              >
                 <AccountCircleIcon className="me-2" /> {userData.customerName}
               </Button>
             </Nav>
           ) : (
-            // Render content for users not logged in
             <Nav className="clr fnt ">
               <Button
-                className="text-dark responvm m-auto  me-2"
+                className="text-dark responvm   me-2"
                 variant="outlined"
                 size="medium"
                 href="/login"
@@ -103,7 +100,7 @@ export default function NabarCompo() {
                 Login
               </Button>
               <Button
-                className="text-dark  responvm m-auto me-2"
+                className="text-dark  responvm  me-2"
                 variant="outlined"
                 size="medium"
                 href="/register"

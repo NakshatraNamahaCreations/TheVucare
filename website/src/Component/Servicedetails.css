@@ -8,6 +8,9 @@
 .area label input {
   display: none;
 }
+.wrong_price{
+  font-size: 15px !important;
+}
 
 .cit-mange {
   display: grid;
@@ -26,30 +29,37 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  background-color: rgb(237, 237, 14);
-  box-shadow: 2px 3px 5px rgb(92, 146, 92);
+  background-color: #e1c314;
+  /* box-shadow: 2px 3px 5px rgb(92, 146, 92); */
   color: green;
+  font-weight: bolder;
 }
 
 .area label input:checked + span {
-  background: #2db408;
+  background: green;
   color: #fff;
 }
 .container_proud {
   height: 80vh;
-
   overflow: auto;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .container_proud::-webkit-scrollbar {
   display: none;
 }
 .header_logo {
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.651);
   border-radius: 20px;
 }
 .valudwidth {
   width: fit-content !important;
+}
+.data_container {
+  border-right: 3px solid #03b162;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 @media (max-width: 767px) {
 }

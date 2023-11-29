@@ -1063,7 +1063,7 @@ export default function CartDetails() {
                         </>
                       )}
                     </div>
-                    <button className="p-2 " onClick={handleBookservices1}>
+                    <button className="col-md-5 m-auto p-2 " onClick={handleBookservices1}>
                       BOOK
                     </button>
                   </div>
@@ -1380,7 +1380,7 @@ export default function CartDetails() {
                 to="/booking"
                 state={{ idd: passseviceid, planBHk: bhk }}
               >
-                <button className="button1" type="submit">
+                <button className="col-md-5 m-auto p-2 button1" type="submit">
                   View Order
                 </button>
               </Link>

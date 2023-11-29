@@ -81,7 +81,7 @@ a,
 
 .slick-sliders {
   width: auto;
-  margin: auto !important;
+  margin: auto;
 }
 .slick-listsd {
   display: flex;
@@ -149,7 +149,7 @@ a,
   width: 150px;
   height: 200px;
   margin: 5px;
-  box-shadow: 0px 0px 5px 1px green;
+  box-shadow: 0px 0px 5px 1px #03b162;
 }
 .btnd {
   border-radius: 20px;
@@ -304,10 +304,15 @@ button {
 
 /* Mobile view styles */
 
-@media (max-width: 767px) {
+@media only screen and (max-width: 767px) {
   .slick-sliders {
     width: none !important;
     margin: auto;
+  }
+  .cart_item_box1 {
+    width: fit-content !important;
+    margin:auto ;
+    margin-top:5px !important;
   }
   .medis {
     top: initial;
