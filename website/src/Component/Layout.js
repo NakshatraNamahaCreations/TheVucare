@@ -206,9 +206,9 @@ export default function Layout() {
   return (
     <>
       {isLoading ? (
-        <div className="row m-auto" height={100}>
+        <div className="row m-auto text-center" style={{ height: "100vh" }}>
           <div className="col-md-4"></div>
-          <div className="col-md-4">
+          <div className="col-md-4 m-auto">
             {" "}
             <ColorRing
               visible={true}
@@ -279,7 +279,7 @@ export default function Layout() {
                 </div>
               ))}
             </div> */}
-            <div className="row clr2 shadow p-5 ">
+            <div className="row  clr2 shadow p-5 ">
               <div className="row   text-center m-auto  ">
                 <div className="col-md-4 p-2 brclr medis1">
                   <p className="row   fnt22 clr3 ">
@@ -314,13 +314,13 @@ export default function Layout() {
                 ))}
               </div>
             </div>
-            <div className="row ">
+            <div className="row m-auto ">
               <div className="col-md-3"></div>
             </div>
-            <div className="row    mt-5 ">
+            <div className="row  m-auto  mt-5 ">
               <h2 className="text-center boldt">Just For You</h2>
               <div className="row text-center">
-                <button className="col-md-2 m-auto btnd clr3 clr2 yellw1 p-2 boldbtn">
+                <button className="col-md-2 m-auto btnd btns_all clr3 clr2 yellw1 p-2 boldbtn">
                   Newly Lounched
                 </button>{" "}
               </div>
@@ -341,7 +341,7 @@ export default function Layout() {
                 </Slider>
               </div>
             </div>
-            <div className="row     mt-5 ">
+            <div className="row  m-auto   mt-5 ">
               <h2 className="text-center boldt">Pest Control</h2>
 
               <div className="row mt-3 slick-listsd slick-listsd1">
@@ -374,7 +374,7 @@ export default function Layout() {
                 </Slider>
               </div>
             </div>
-            <div className="row  m-auto  mt-5">
+            <div className="row m-auto   mt-5">
               <Card className="borderrad">
                 <img
                   className="border1"
@@ -384,10 +384,10 @@ export default function Layout() {
               </Card>
             </div>
 
-            <div className="row  m-auto  mt-5 ">
+            <div className="row m-auto   mt-5 ">
               <h2 className="text-center">Cleaning Services</h2>
               <div className="row text-center">
-                <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
+                <button className="col-md-3 m-auto btnd btns_all clr3 clr2 p-2 yellw1 boldbtn">
                   30% Less Than Market Price
                 </button>{" "}
               </div>
@@ -424,9 +424,9 @@ export default function Layout() {
             </div>
 
             <div className="row  m-auto  mt-5 ">
-              <h2 className="text-center boldt">Pest Control</h2>
+              <h2 className="text-center boldt">Painting </h2>
               <div className="row text-center">
-                <button className="col-md-3 m-auto btnd clr3 clr2 p-2 yellw1 boldbtn">
+                <button className="col-md-3 m-auto btns_all btnd clr3 clr2 p-2 yellw1 boldbtn">
                   Asian Paints Certified
                 </button>{" "}
               </div>
@@ -469,7 +469,7 @@ export default function Layout() {
 
             <Review />
 
-            <div className="row me-0  mt-5 mb-5 p-1 p-re">
+            <div className="row me-0  m-auto mt-5 mb-5 p-1 p-re">
               <h2 className="text-center boldt">Why Choose Us?</h2>
 
               <div className="container  mt-3 p-5 rdiu clr2 p-5">

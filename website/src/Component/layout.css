@@ -80,7 +80,8 @@ a,
 }
 
 .slick-sliders {
-  width: auto !important;
+  width: auto;
+  margin: auto !important;
 }
 .slick-listsd {
   display: flex;
@@ -304,10 +305,10 @@ button {
 /* Mobile view styles */
 
 @media (max-width: 767px) {
-  /* .mrgn {
-    margin-top: 30px !important;
-  } */
-
+  .slick-sliders {
+    width: none !important;
+    margin: auto;
+  }
   .medis {
     top: initial;
     left: initial;
@@ -361,7 +362,11 @@ button {
     justify-content: center;
     margin: auto;
   }
-
+  .btns_all {
+    margin: auto;
+    width: 200px;
+    font-size: 12px;
+  }
   .responsive-brimg {
     width: 100px;
     height: 100px;
