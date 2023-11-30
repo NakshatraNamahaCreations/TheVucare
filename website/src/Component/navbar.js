@@ -92,8 +92,13 @@ export default function NabarCompo() {
           <Offcanvas.Title>Profile</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <p>Name : {userData?.customerName}</p>
-          <p>Contact : {userData?.contactPerson}</p>
+          <p>
+            Name :{" "}
+            {userData?.customerName &&
+              userData.customerName.charAt(0).toUpperCase() +
+                userData.customerName.slice(1)}
+          </p>
+          <p>Contact : {userData?.mainContact}</p>
         </Offcanvas.Body>
         <div>
           <p

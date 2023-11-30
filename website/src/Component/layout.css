@@ -268,9 +268,10 @@ button {
 
 .drop_dow {
   position: absolute;
-  height: 40vh;
+  height: 20vh;
   overflow-y: scroll;
   z-index: 100;
+
 }
 .p {
   margin-bottom: 0 !important;

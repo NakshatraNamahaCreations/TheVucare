@@ -5,7 +5,7 @@ import axios from "axios";
 import img from "./img/Flag-India.webp";
 import NabarCompo from "./navbar";
 import Modal from "@mui/material/Modal";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./header.css";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -106,11 +106,6 @@ export default function Header() {
     setIsDropdownEnabled(true);
   };
 
-  const handleLinkClick = () => {
-    if (SearchSubCategory === "" || selectedOption?.city?.length === 0) {
-      alert("Please Select city or service");
-    }
-  };
   const CustomInputBase = styled(InputBase)(({ theme }) => ({
     backgroundColor: "#F5F6F8",
     border: "1px solid #E2E6EA",
@@ -129,12 +124,17 @@ export default function Header() {
       padding: "8px 12px",
     },
   }));
-
-  const handleEnterKeyPress = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleLinkClick();
-      console.log(event.key, "event.key");
+  const navigate = useNavigate();
+  const handleLinkClick = () => {
+    if (SearchSubCategory === "" || selectedOption?.city?.length === 0) {
+      alert("Please Select city or service");
+    } else {
+      navigate("/servicedetails", {
+        state: {
+          subcategory: SearchSubCategory,
+          SelecteddCity: selectedOption.city,
+        },
+      });
     }
   };
 
@@ -155,40 +155,6 @@ export default function Header() {
           <div className="row   justify-content-end">
             <div className="col-md-7 mt-5 ">
               <div className="row inputbox">
-                {/* <div className="col-md-4  inputbox1 shadow-sm me-1   bg-white p-3  brd">
-                <div className="row me-3">
-                  <div className="col-md-3 text-center ">
-                    <img
-                      src={img}
-                      width={30}
-                      height={30}
-                      className=" imgbr custom-dropdown-toggle"
-                      alt="Flag"
-                    />
-                  </div>
-                  <div
-                    className="col-md-9 select-city"
-                    onClick={handleResetModal}
-                  >
-                    <span>
-                      {selectedOption.city === null ||
-                      selectedOption.city === undefined
-                        ? "Select City"
-                        : selectedOption.city}
-                    </span>
-                    <svg
-                      height="20"
-                      width="20"
-                      viewBox="0 0 20 20"
-                      aria-hidden="true"
-                      focusable="false"
-                      class="css-tj5bde-Svg"
-                    >
-                      <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path>
-                    </svg>
-                  </div>{" "}
-                </div>
-              </div> */}
                 <div className="col-md-4">
                   <CustomInputBase
                     className="shadow-sm me-1   bg-white"
@@ -223,13 +189,13 @@ export default function Header() {
                     }
                   />
                 </div>
+
                 <div className="col-md-7 responvm">
                   <input
                     placeholder="Search for services"
                     value={SearchSubCategory}
-                    defaultValue="Your Default Value Here"
-                    onChange={(event) => {
-                      handleSearch(event);
+                    onChange={(event) => handleSearch(event)}
+                    onKeyDown={(event) => {
                       if (event.key === "Enter") {
                         event.preventDefault();
                         handleLinkClick();
@@ -237,22 +203,15 @@ export default function Header() {
                       }
                     }}
                     type="search"
-                    startAdornment={
-                      <Link
-                        to="/servicedetails"
-                        state={{
-                          subcategory: SearchSubCategory,
-                          SelecteddCity: selectedOption.city,
-                        }}
-                        key={SearchSubCategory}
-                        style={{ textDecoration: "none" }}
-                        className="text-decoration-none text-black"
-                      ></Link>
-                    }
                   />
-
                   {!isDropdownEnabled && (
-                    <div className="drop_dow shadow-sm p-3 mb-5 bg-white rounded">
+                    <div
+                      className={` ${
+                        !SearchSubCategoryd
+                          ? ""
+                          : "drop_dow shadow-sm p-3 mb-5 bg-white rounded"
+                      }`}
+                    >
                       {SearchSubCategoryd?.map((ele) => (
                         <p
                           key={ele}

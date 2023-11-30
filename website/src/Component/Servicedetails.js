@@ -32,10 +32,10 @@ function Servicedetails() {
   const [ServiceID, setServiceID] = useState(null);
   const [ServiceIDD, setServiceIDD] = useState(null);
   const [Bannerdata, setBannerdata] = useState([]);
-  const [showoffcanvas, setOffcanvas] = useState(false);
+  const [ShowOffcanvas, setShowOffcanvas] = useState(false);
 
-  const handleBookingClose = () => setOffcanvas(false);
-  const handleBookingShow = () => setOffcanvas(true);
+  const handleBookingClose = () => setShowOffcanvas(false);
+  // const handleBookingShow = () => setOffcanvas(true);
 
   useEffect(() => {
     getAllServices();
@@ -63,13 +63,15 @@ function Servicedetails() {
     }
   };
   const handlebookclick = (clickedItem) => {
-    // console.log(clickedItem,"item")
-    // setpricesdata(clickedItem?.morepriceData);
-    setItem(clickedItem);
+    const isMobileView = window.innerWidth < 768;
 
-    setsubModel(true);
-    // window.location.assign("/");
-    console.log(clickedItem, "clickedItem");
+    if (isMobileView) {
+      setItem(clickedItem);
+      setShowOffcanvas(true);
+    } else {
+      setItem(clickedItem);
+      setsubModel(true);
+    }
   };
 
   const getCity = async () => {
@@ -240,10 +242,10 @@ function Servicedetails() {
                     .map((Ele, index) => (
                       <img
                         alt=""
-                        className="header_logo res-header-logo brd p-0"
+                        className="header_logo res-header-logo brd p-0 m-auto"
                         src={Ele.img}
                         width={100}
-                        height={340}
+                        height={240}
                       />
                     ))}
                 </>
@@ -413,7 +415,7 @@ function Servicedetails() {
                       <div className="col-md-4  m-auto">
                         <img
                           width={200}
-                          className="row  header_logo responsive-img"
+                          className="row mb-2 header_logo responsive-img"
                           height={150}
                           src={`http://api.thevucare.com/service/${service?.serviceImg}`}
                           alt=""
@@ -427,193 +429,201 @@ function Servicedetails() {
             </div>
           </div>
           <div className="col-md-1"></div>
-          <div className={`col-md-5  ${showoffcanvas ? "modalend" : ""}`}>
-            <div className=" cart_item_box cart_item_box1 text-center ">
-              {!PriceId && (
-                <>
-                  <img
-                    className="m-auto mt-3"
-                    width={180}
-                    height={100}
-                    src="../images/cart.png"
-                    alt=""
-                  />
-                  <div className="texts m-auto">No items in your cart</div>
-                </>
-              )}
-              {serviceData?.map((ele) => {
-                if (ele._id.includes(ServiceIDD)) {
-                  return (
-                    <>
-                      <div className="item_title">{ele?.serviceName}</div>
-                      <div className="item_content row m-auto">
-                        <div className="col-md-4 m-auto left">
-                          <div className="left_img">
+          {ShowOffcanvas ? (
+            <Offcanvas
+              placement="bottom"
+              show={ShowOffcanvas}
+              onHide={handleBookingClose}
+            >
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                Some text as placeholder. In real life you can have the elements
+                you have chosen. Like, text, images, lists, etc.
+              </Offcanvas.Body>
+            </Offcanvas>
+          ) : (
+            <div className="col-md-5 ">
+              <div className="row  cart_item_box cart_item_box1 text-center ">
+                {!PriceId && (
+                  <div>
+                    <img
+                      className="col-md-3 m-auto mt-3"
+                      width={100}
+                      height={100}
+                      src="../NewImg/crts.png"
+                      alt=""
+                    />
+                    <div className="texts m-auto">No items in your cart</div>
+                  </div>
+                )}
+                {serviceData?.map((ele) => {
+                  if (ele._id.includes(ServiceIDD)) {
+                    return (
+                      <>
+                        <div className="item_title">{ele?.serviceName}</div>
+                        <div className="item_content row m-auto">
+                          <div className="col-md-4 m-auto left">
+                            {/* <div className="row left_img"> */}
                             <img
-                              className=""
+                              className="brd row responsive-img"
                               width={300}
-                              height={300}
+                              height={50}
                               src={`http://api.thevucare.com/service/${ele?.serviceImg}`}
                               alt=""
                             />
-                          </div>
+                            {/* </div> */}
 
-                          <div className="texts">
-                            <h4>{ele.servicetitle}</h4>
+                            <div className="texts ">
+                              <h4>{ele.servicetitle}</h4>
+                            </div>
+                            <div className="row m-auto">
+                              {ele.morepriceData
+                                .filter((item) => item?._id === PriceId)
+                                .map((filteredElement) => (
+                                  <div key={filteredElement?._id}>
+                                    {filteredElement?.pName}
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                          <div className="col-md-7 m-auto">
                             {ele.morepriceData
                               .filter((item) => item?._id === PriceId)
+
                               .map((filteredElement) => (
-                                <div key={filteredElement?._id}>
-                                  {filteredElement?.pName}
+                                <div className="row   ">
+                                  {filteredElement?.pofferprice?.includes(
+                                    "contact" ||
+                                      filteredElement?.pPrice?.includes(
+                                        "contact"
+                                      )
+                                  ) ? (
+                                    <p>Contact For Price</p>
+                                  ) : (
+                                    <>
+                                      <span className="col-md-6 m-auto wrong_price ">
+                                        {filteredElement?.pPrice && "Rs."}{" "}
+                                        {filteredElement?.pPrice}
+                                      </span>
+                                      <span className="col-md-6 m-auto real_price wrong_price">
+                                        {filteredElement?.pPrice && "Rs."}{" "}
+                                        {filteredElement?.pofferprice}
+                                      </span>
+                                    </>
+                                  )}
                                 </div>
                               ))}
                           </div>
                         </div>
-                        <div className="col-md-7 m-auto">
-                          {ele.morepriceData
-                            .filter((item) => item?._id === PriceId)
 
-                            .map((filteredElement) => (
-                              <div className="row   ">
-                                {filteredElement?.pofferprice?.includes(
-                                  "contact" ||
-                                    filteredElement?.pPrice?.includes("contact")
-                                ) ? (
-                                  <p>Contact For Price</p>
-                                ) : (
-                                  <>
-                                    <span className="col-md-6 m-auto wrong_price ">
-                                      {filteredElement?.pPrice && "Rs."}{" "}
-                                      {filteredElement?.pPrice}
-                                    </span>
-                                    <span className="col-md-6 m-auto real_price wrong_price">
-                                      {filteredElement?.pPrice && "Rs."}{" "}
-                                      {filteredElement?.pofferprice}
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                            ))}
-                        </div>
-                      </div>
+                        {ele.morepriceData
+                          .filter((item) => item?._id === PriceId)
 
-                      {ele.morepriceData
-                        .filter((item) => item?._id === PriceId)
-
-                        .map((filteredElement) => (
-                          <div className="row   ">
-                            {filteredElement?.pofferprice?.includes(
-                              "contact" ||
-                                filteredElement?.pPrice?.includes("contact")
-                            ) ? (
-                              <div className="row  m-2">
-                                <button
-                                  onClick={() =>
-                                    sendWhatsAppMessage(filteredElement._id)
-                                  }
-                                  className="col-md-6 m-auto grndclr "
-                                  style={{
-                                    padding: "8px",
-                                    background: "gold",
-                                  }}
-                                >
-                                  Enquire Now
-                                </button>
-                              </div>
-                            ) : (
-                              <>
-                                {PriceId !== null &&
-                                  PriceId !== undefined &&
-                                  ele._id === ServiceIDD && (
-                                    <div
-                                      className="m-auto text-center p-2"
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <Link
-                                        to="/viewcart"
-                                        state={{
-                                          passseviceid: ele._id,
-                                          bhk: PriceId,
-                                          selectecity: SelectedCity,
+                          .map((filteredElement) => (
+                            <div className="row   ">
+                              {filteredElement?.pofferprice?.includes(
+                                "contact" ||
+                                  filteredElement?.pPrice?.includes("contact")
+                              ) ? (
+                                <div className="row  m-2">
+                                  <button
+                                    onClick={() =>
+                                      sendWhatsAppMessage(filteredElement._id)
+                                    }
+                                    className="col-md-6 m-auto grndclr "
+                                    style={{
+                                      padding: "8px",
+                                      background: "gold",
+                                    }}
+                                  >
+                                    Enquire Now
+                                  </button>
+                                </div>
+                              ) : (
+                                <>
+                                  {PriceId !== null &&
+                                    PriceId !== undefined &&
+                                    ele._id === ServiceIDD && (
+                                      <div
+                                        className="m-auto text-center p-2"
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          alignItems: "center",
                                         }}
-                                        key={ele.serviceName}
-                                        style={{ textDecoration: "none" }}
                                       >
-                                        <button
-                                          className="grndclr"
-                                          style={{
-                                            width: "300px",
-                                            padding: "8px",
-                                            background: "gold",
-                                            // color: "#03b162",
+                                        <Link
+                                          to="/viewcart"
+                                          state={{
+                                            passseviceid: ele._id,
+                                            bhk: PriceId,
+                                            selectecity: SelectedCity,
                                           }}
+                                          key={ele.serviceName}
+                                          style={{ textDecoration: "none" }}
                                         >
-                                          Continue
-                                          {/* <AddIcon /> */}
-                                        </button>
-                                      </Link>
-                                    </div>
-                                  )}
-                              </>
-                            )}
-                          </div>
-                        ))}
-                    </>
-                  );
-                }
-              })}
-            </div>
-            <div className=" cart_item_box  cart_item_box1">
-              <div className="item_title ">Vu Care</div>
-              <div className="item_content">
-                <div className="left">
-                  <div className="texts me-2">
-                    <p>
-                      <span>
-                        <CheckIcon /> <span>Verified Professionals</span>
-                      </span>
-                    </p>
-                    <p>
-                      <span>
-                        <CheckIcon /> <span>Safe Chemicals</span>
-                      </span>
-                    </p>
-                    <p>
-                      <span>
-                        <CheckIcon /> <span>Mess Free Experience</span>
-                      </span>
-                    </p>
+                                          <button
+                                            className="grndclr"
+                                            style={{
+                                              width: "300px",
+                                              padding: "8px",
+                                              background: "gold",
+                                              // color: "#03b162",
+                                            }}
+                                          >
+                                            Continue
+                                            {/* <AddIcon /> */}
+                                          </button>
+                                        </Link>
+                                      </div>
+                                    )}
+                                </>
+                              )}
+                            </div>
+                          ))}
+                      </>
+                    );
+                  }
+                })}
+              </div>
+              <div className="row cart_item_box  cart_item_box1">
+                <div className="item_title ">Vu Care</div>
+                <div className="item_content">
+                  <div className="left">
+                    <div className="texts me-2">
+                      <p>
+                        <span>
+                          <CheckIcon /> <span>Verified Professionals</span>
+                        </span>
+                      </p>
+                      <p>
+                        <span>
+                          <CheckIcon /> <span>Safe Chemicals</span>
+                        </span>
+                      </p>
+                      <p>
+                        <span>
+                          <CheckIcon /> <span>Mess Free Experience</span>
+                        </span>
+                      </p>
+                    </div>
+                    <img
+                      className=" brd"
+                      alt=""
+                      src="../images/cleaning-favicon-color.png"
+                      width={100}
+                      height={100}
+                    />
                   </div>
-                  <img
-                    className=" brd"
-                    alt=""
-                    src="../images/cleaning-favicon-color.png"
-                    width={100}
-                    height={100}
-                  />
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
-      <Offcanvas
-        placement="bottom"
-        show={showoffcanvas}
-        onHide={handleBookingClose}
-      >
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          Some text as placeholder. In real life you can have the elements you
-          have chosen. Like, text, images, lists, etc.
-        </Offcanvas.Body>
-      </Offcanvas>
+
       <Modal
         open={subModel}
         aria-labelledby="modal-modal-title"
