@@ -40,34 +40,10 @@ export default function NabarCompo() {
     <Navbar expand="lg " bg="light" data-bs-theme="light">
       <Container>
         <Navbar.Brand className="clr fnt bg-white  rounded-lg brd p-1" href="/">
-          <img src="..\images\VU Care Logo.png" width={200} height={46} />
+          <img src="..\images\vucarpng.png" width={200} height={46} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav wiauto" />
         <Navbar.Collapse className="justify-content-end">
-          <Nav className="clr fnt me-2">
-            <img
-              alt=""
-              className="cursor-pointer"
-              onClick={openWhatsapp}
-              src="..\images\wicon1 (1).png"
-              width={50}
-              height={50}
-            />
-          </Nav>
-          <Nav className="clr fnt me-2">
-            {" "}
-            <a href="https://www.instagram.com/vucareservices/">
-              <img
-                alt=""
-                src="..\images\wicon1 (2).png"
-                width={50}
-                height={50}
-              />
-            </a>
-          </Nav>
-          <Nav className="clr fnt me-2">
-            <img alt="" src="..\images\wicon1 (3).png" width={50} height={50} />
-          </Nav>
           <Nav className="clr fnt me-2">
             <a href={`tel:${phoneNumber}`} className="text-decoration-none">
               <Button variant="outlined" size="medium">

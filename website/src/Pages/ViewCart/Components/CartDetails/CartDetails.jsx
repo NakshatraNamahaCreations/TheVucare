@@ -72,6 +72,7 @@ export default function CartDetails() {
   const [SelectedAddress, setSelectedAddress] = useState(null);
   const [allBookedServices, setallBookedServices] = useState(null);
 
+  console.log("selectedDate", selectedDate);
   useEffect(() => {
     getAllServices();
     getVoucher();
@@ -212,6 +213,8 @@ export default function CartDetails() {
   const grandTotal =
     Number(subtotal) - Number(discountAmount) + Number(getaddonsSum);
 
+  //   Calender
+
   const currentDate = new Date();
 
   const daysOfWeek = [
@@ -245,18 +248,12 @@ export default function CartDetails() {
     setFourDates(nextDays);
   }, []);
 
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-
   const tileDisabled = ({ date }) => {
-    const isPastDate = date <= yesterday;
-    const isNextFourDate = fourDates.some((d) => {
-      const dDate = new Date(d.year, d.month - 1, d.day);
-      return date.toDateString() === dDate.toDateString();
-    });
+    const isPastDate = moment(date).isBefore(moment(), "day");
 
-    return isPastDate || isNextFourDate;
+    return isPastDate;
   };
+
   const tileClassName = ({ date }) => {
     const isNextFourDate = fourDates.some((d) => {
       const dDate = new Date(d.year, d.month - 1, d.day);
@@ -270,42 +267,14 @@ export default function CartDetails() {
     e.preventDefault();
     setdatePicker(true);
   };
-
-  // const cityname = selectecity?.toLowerCase();
-
-  const filteredServices = services?.map((ele) =>
-    ele?.store_slots?.map((slot) => slot)
-  );
-  const getAddons = async () => {
-    try {
-      let res = await axios.get(
-        `http://api.thevucare.com/api/userapp/getServiceAddOns`
-      );
-      if (res.status === 200) {
-        setAddOn(res?.data?.AddOns);
-        // .filter((i) => i.addOnsCategory === selectedCategory)
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  let cate = services?.map((ele) => ele?.serviceName?.toLowerCase());
-  const filteredAddons = AddOn?.filter((addon) => {
-    const addonCategory = addon?.addOnsCategory?.toLowerCase();
-    return addonCategory?.includes(cate);
-  });
-
   const handleCalendarSelect = (date) => {
-    const selectedDate = moment.isMoment(date) ? date.toDate() : date;
+    const selectedDate = moment(date).toDate();
+
     setSelectedDate(selectedDate);
+    // console.log(selectedDate, "selectedDate");
     setdatePicker(false);
   };
-
-  const handleSlotSelect = (starttime, endtime) => {
-    setselectedSlotsID([{ startTime: starttime, endTime: endtime }]);
-  };
-
+  console.log(selectedDate, "select");
   const monthsMap = {
     "01": "January",
     "02": "February",
@@ -334,9 +303,10 @@ export default function CartDetails() {
     const formattedDay = moment(
       `${monthName} ${dayNumber}, ${year}`,
       "MMMM D, YYYY"
-    ).format("LL");
+    );
+    const formattedDateString = formattedDay.format("LL");
 
-    return formattedDay === selectedDate;
+    return formattedDateString === selectedDate;
   };
 
   const handleCheckboxSelect = (day) => {
@@ -348,6 +318,31 @@ export default function CartDetails() {
 
     setSelectedDate(formattedDateString);
   };
+
+  const getAddons = async () => {
+    try {
+      let res = await axios.get(
+        `http://api.thevucare.com/api/userapp/getServiceAddOns`
+      );
+      if (res.status === 200) {
+        setAddOn(res?.data?.AddOns);
+        // .filter((i) => i.addOnsCategory === selectedCategory)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  let cate = services?.map((ele) => ele?.serviceName?.toLowerCase());
+  const filteredAddons = AddOn?.filter((addon) => {
+    const addonCategory = addon?.addOnsCategory?.toLowerCase();
+    return addonCategory?.includes(cate);
+  });
+
+  const handleSlotSelect = (starttime, endtime) => {
+    setselectedSlotsID([{ startTime: starttime, endTime: endtime }]);
+  };
+
   const serviceidd = services?.flatMap((ele) => ele);
 
   const selectedSlotTextget = selectedSlotsID
@@ -458,13 +453,6 @@ export default function CartDetails() {
   //   }
   // };
 
-  const isSurvey = services?.some((ele) =>
-    ele?.serviceDirection?.includes("Survey")
-  );
-  let isEnquiry = services?.some((ele) =>
-    ele?.serviceDirection?.includes("Enquiry")
-  );
-
   let ServicePans = cartData?.map((item) =>
     item.morepriceData.filter((item) => item?._id === bhk)?.map((ele) => ele)
   );
@@ -535,7 +523,7 @@ export default function CartDetails() {
         let filtredServices = response.data.servicedetails.filter(
           (itme) => itme.serviceID !== passseviceid
         );
-        console.log(filtredServices, "filtredServices");
+        // console.log(filtredServices, "filtredServices");
         setallBookedServices(filtredServices);
       }
     } catch (err) {
@@ -799,35 +787,45 @@ export default function CartDetails() {
                 <div className="title">Schedule Service</div>
                 <div className="select_date">
                   <div className="text">Select the date</div>
-
                   <div className="date_selection">
                     {fourDates?.map((day, index) => {
                       const isChecked = isDateSelected(day);
 
                       return (
-                        <label htmlFor={day.id} key={index}>
+                        <label htmlFor={`checkbox-${index}`} key={index}>
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleCheckboxSelect(day)}
-                            name={day.id}
-                            id={day.id}
+                            name={`checkbox-${index}`}
+                            id={`checkbox-${index}`}
                           />
 
                           <span
                             className={`inpt ${isChecked ? "matching" : ""}`}
-                            onClick={() => handleCheckboxSelect(day)}
                           >
-                            {day?.dayName}- {day?.day}
+                            {day?.dayName} , {day?.day}
                           </span>
                         </label>
                       );
                     })}
                   </div>
+
                   <div className="date row">
                     <button onClick={DatePicker} style={{ cursor: "pointer" }}>
-                      Pick Date
+                      {!selectedDate ? (
+                        "Pick Date"
+                      ) : (
+                        <>
+                          {" "}
+                          <span className="me-3">
+                            {moment(selectedDate).format("LL")}{" "}
+                          </span>
+                          <span className="clrg">Change</span>
+                        </>
+                      )}
                     </button>
+
                     <div className="date_picker"></div>
                   </div>
                   {datepicker && (
@@ -843,15 +841,13 @@ export default function CartDetails() {
                         zIndex: "100",
                       }}
                     >
-                      <div>
-                        <Calendar
-                          onChange={(date) => handleCalendarSelect(date)}
-                          value={selectedDate}
-                          calendarType="US"
-                          tileDisabled={tileDisabled}
-                          tileClassName={tileClassName}
-                        />
-                      </div>
+                      <Calendar
+                        onChange={(date) => handleCalendarSelect(date)}
+                        value={selectedDate}
+                        calendarType="US"
+                        tileDisabled={tileDisabled}
+                        tileClassName={tileClassName}
+                      />
                     </div>
                   )}
                 </div>
@@ -859,7 +855,7 @@ export default function CartDetails() {
                   <div className="text">Select the Slot</div>
 
                   <div className="date_selection">
-                    {filteredServices?.map((ele) =>
+                    {services?.map((ele) =>
                       ele.store_slots?.map((slotItem) => {
                         const isSlotSelected = selectedSlotsID?.some(
                           (ele) =>
@@ -1063,7 +1059,10 @@ export default function CartDetails() {
                         </>
                       )}
                     </div>
-                    <button className="col-md-5 m-auto p-2 " onClick={handleBookservices1}>
+                    <button
+                      className="col-md-5 m-auto p-2 "
+                      onClick={handleBookservices1}
+                    >
                       BOOK
                     </button>
                   </div>
@@ -1351,14 +1350,13 @@ export default function CartDetails() {
                   onClick={handleBookservices}
                   className="goto_pay p-3 button1"
                 >
-                  <span className="me-4 ">
-                    {" "}
+                  <span className="me-4 "> Pay</span>
+                  <span className="">
                     {new Intl.NumberFormat("en-IN", {
                       style: "currency",
                       currency: "INR",
                     }).format(grandTotal)}
                   </span>{" "}
-                  Pay
                 </button>
               </div>
             </div>

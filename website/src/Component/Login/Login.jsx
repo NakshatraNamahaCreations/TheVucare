@@ -54,10 +54,7 @@ export default function Login() {
 
       if (res.status === 200) {
         alert("Login Succesfully added");
-        console.log(res?.data?.user);
         sessionStorage.setItem("userdata", JSON.stringify(res?.data?.user));
-        // Serialize the user object to JSON
-
         window.location.href = "/viewcart";
       }
     } catch (err) {
@@ -65,21 +62,7 @@ export default function Login() {
       console.log(err, "err while adding customer");
     }
   };
-  const handleAppleSignIn = async () => {
-    try {
-      const response = await window.AppleID.auth.signIn({
-        requestedScopes: ["email", "name"],
-      });
 
-      // Handle the response, which contains user information.
-      console.log(response);
-
-      // You can send the response to your server for further processing.
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-    }
-  };
   return (
     <section className="login">
       <NabarCompo />

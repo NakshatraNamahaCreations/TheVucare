@@ -8,14 +8,14 @@ import Modal from "@mui/material/Modal";
 // import  "../Pages/ViewCart/Components/cartdetails.scss"
 // import ViewCart from "../Pages/ViewCart/ViewCart";
 import "../Component/Servicedetails.css";
-import "../Component/layout.css"
+import "../Component/layout.css";
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import PeopleIcon from "@mui/icons-material/People";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
-
+import Offcanvas from "react-bootstrap/Offcanvas";
 function Servicedetails() {
   const location = useLocation();
   const { subcategory, SelecteddCity } = location.state || {};
@@ -32,6 +32,11 @@ function Servicedetails() {
   const [ServiceID, setServiceID] = useState(null);
   const [ServiceIDD, setServiceIDD] = useState(null);
   const [Bannerdata, setBannerdata] = useState([]);
+  const [showoffcanvas, setOffcanvas] = useState(false);
+
+  const handleBookingClose = () => setOffcanvas(false);
+  const handleBookingShow = () => setOffcanvas(true);
+
   useEffect(() => {
     getAllServices();
     getbannerimg();
@@ -99,9 +104,6 @@ function Servicedetails() {
       setServiceID(allServiceIDs);
     }
   }, [serviceData]);
-  // const handleAdd = (state) => {
-  //   console.log(state, "state");
-  // };
 
   const getbannerimg = async () => {
     let res = await axios.get(
@@ -112,7 +114,6 @@ function Servicedetails() {
         Ele.category.includes(subcategory)
       );
       setBannerdata(filteredData);
-      // console.log(res.data?.subcategoyrbanner);
     }
   };
   const storedUserDataJSON = sessionStorage.getItem("userdata");
@@ -129,7 +130,12 @@ function Servicedetails() {
     { img: "../images/painting.jpeg" },
     { img: "../images/icons8-garden-94.png" },
   ];
-
+  const banners = [
+    { categ: "cleaning", img: "../NewImg/Bannercln.jpg" },
+    { categ: "pest control", img: "../NewImg/Bannerpest.jpg" },
+    { categ: "paint", img: "../NewImg/Bannerpnt.jpg" },
+    { categ: "garden", img: "../NewImg/Bannergrdn.jpg" },
+  ];
   const sendWhatsAppMessage = (PriceId, service) => {
     let Data = serviceData
       ?.flatMap((ele) =>
@@ -183,8 +189,6 @@ function Servicedetails() {
       <div className="container mt-3">
         <div className="row">
           <div className="col-md-6">
-
-
             <div className="row m-auto mb-3">
               {/* <Form.Select
                 value={SelectedCity}
@@ -201,12 +205,12 @@ function Servicedetails() {
             </div>
             <div className="cart_item_box text-center">
               {" "}
-              <div className="item_title">Sevices</div>
-              <div className="row ">
+              <div className="item_title">Services</div>
+              <div className="row icons-list">
                 {" "}
                 {icons?.map((ele) => {
                   return (
-                    <div className="col-md-5 m-2 p-2 ">
+                    <div className="col-md-5  m-2 p-2 ">
                       <img
                         className="shadow rounded"
                         width={75}
@@ -224,18 +228,30 @@ function Servicedetails() {
           <div className="col-md-5 ">
             <div className="row mt-3  brd">
               {Bannerdata.length === 0 ? (
-                <img
-                  alt=""
-                  className="header_logo brd p-0"
-                  src="../images/bnr.avif"
-                  width={100}
-                  height={340}
-                />
+                <>
+                  {banners
+                    .filter((banr) => {
+                      const lowerCaseSubcategory = subcategory?.toLowerCase?.();
+                      return (
+                        lowerCaseSubcategory &&
+                        lowerCaseSubcategory.includes(banr.categ)
+                      );
+                    })
+                    .map((Ele, index) => (
+                      <img
+                        alt=""
+                        className="header_logo res-header-logo brd p-0"
+                        src={Ele.img}
+                        width={100}
+                        height={340}
+                      />
+                    ))}
+                </>
               ) : (
                 Bannerdata.map((Ele) => (
                   <img
                     alt=""
-                    className="header_logo brd p-0"
+                    className="header_logo res-header-logo brd p-0"
                     src={`http://api.thevucare.com/subcatwebBanner/${Ele.banner}`}
                     width={100}
                     height={320}
@@ -257,12 +273,14 @@ function Servicedetails() {
               ) : (
                 serviceData?.map((service, index) => {
                   return (
-                    <div className="row mt-5">
-                      <div className="col-8">
-                        <h3>{service.serviceName}</h3>
+                    <div className="row icons-list mt-5">
+                      <div className="col-md-8 ">
+                        <p className="res-txt servicenme">
+                          {service.serviceName}
+                        </p>
                         {service?.serviceHour ? (
                           <span className="me-3">
-                            Service Hour {service?.serviceHour}
+                            Duration {service?.serviceHour}
                           </span>
                         ) : null}
                         <div className="row d-flex mt-3">
@@ -296,13 +314,7 @@ function Servicedetails() {
                                           >
                                             Rs. {ele?.pPrice}
                                           </p>
-                                          <p
-                                            className="col-md-5"
-                                            style={{
-                                              color: "#03b162",
-                                              fontWeight: "bold",
-                                            }}
-                                          >
+                                          <p className="col-md-5 grndclr text-bolder">
                                             Rs. {ele?.pofferprice}
                                           </p>
                                         </>
@@ -342,13 +354,7 @@ function Servicedetails() {
                                                 >
                                                   Rs. {filteredData?.pPrice}
                                                 </p>
-                                                <p
-                                                  className="col-md-4"
-                                                  style={{
-                                                    color: "#03b162",
-                                                    fontWeight: "bold",
-                                                  }}
-                                                >
+                                                <p className="col-md-4 grndclr text-bold">
                                                   Rs.{" "}
                                                   {filteredData?.pofferprice}
                                                 </p>
@@ -367,7 +373,7 @@ function Servicedetails() {
                           {service?.morepriceData?.map(
                             (moreprice, innerindex) => {
                               return (
-                                <div className="col-md-3 area valudwidth ">
+                                <div className="col-md-3 res-lable area valudwidth ">
                                   {moreprice?.pName && (
                                     <label
                                       htmlFor={moreprice._id}
@@ -397,17 +403,17 @@ function Servicedetails() {
                           )}
                         </div>
                         <p
-                          style={{ color: "#03b162" }}
+                          className="cursor grndclr"
                           onClick={() => handlebookclick(service)}
                         >
                           View details
                         </p>
                       </div>
 
-                      <div className="col-md-4 m-auto">
+                      <div className="col-md-4  m-auto">
                         <img
                           width={200}
-                          className="row  header_logo"
+                          className="row  header_logo responsive-img"
                           height={150}
                           src={`http://api.thevucare.com/service/${service?.serviceImg}`}
                           alt=""
@@ -421,7 +427,7 @@ function Servicedetails() {
             </div>
           </div>
           <div className="col-md-1"></div>
-          <div className="col-5 ">
+          <div className={`col-md-5  ${showoffcanvas ? "modalend" : ""}`}>
             <div className=" cart_item_box cart_item_box1 text-center ">
               {!PriceId && (
                 <>
@@ -505,11 +511,10 @@ function Servicedetails() {
                                   onClick={() =>
                                     sendWhatsAppMessage(filteredElement._id)
                                   }
-                                  className="col-md-6 m-auto"
+                                  className="col-md-6 m-auto grndclr "
                                   style={{
                                     padding: "8px",
                                     background: "gold",
-                                    color: "#03b162",
                                   }}
                                 >
                                   Enquire Now
@@ -539,11 +544,12 @@ function Servicedetails() {
                                         style={{ textDecoration: "none" }}
                                       >
                                         <button
+                                          className="grndclr"
                                           style={{
                                             width: "300px",
                                             padding: "8px",
                                             background: "gold",
-                                            color: "#03b162",
+                                            // color: "#03b162",
                                           }}
                                         >
                                           Continue
@@ -595,7 +601,19 @@ function Servicedetails() {
           </div>
         </div>
       </div>
-
+      <Offcanvas
+        placement="bottom"
+        show={showoffcanvas}
+        onHide={handleBookingClose}
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          Some text as placeholder. In real life you can have the elements you
+          have chosen. Like, text, images, lists, etc.
+        </Offcanvas.Body>
+      </Offcanvas>
       <Modal
         open={subModel}
         aria-labelledby="modal-modal-title"
@@ -626,7 +644,6 @@ function Servicedetails() {
                     className="col-md-5 m-auto p-0 mt-2 header_logo"
                     src={`http://api.thevucare.com/service/${Item?.serviceImg}`}
                     alt=""
-                    // width={200}
                     height={200}
                   />
                 </div>
@@ -642,7 +659,7 @@ function Servicedetails() {
 
                   {Item?.morepriceData?.map((Ele) => (
                     <div className="row ">
-                      <div className="col-md-3 p-2  area valudwidth ">
+                      <div className="col-md-3 p-2   area valudwidth ">
                         {Ele?.pName && (
                           <label
                             htmlFor={Ele._id}
@@ -656,7 +673,7 @@ function Servicedetails() {
                               // defaultChecked={innerindex === 0}
                               value={Price}
                             />
-                            <span className="  ">{Ele?.pName}</span>
+                            <span className=" res-txt ">{Ele?.pName}</span>
                           </label>
                         )}
                       </div>
@@ -706,9 +723,6 @@ function Servicedetails() {
           </div>
         </div>
       </Modal>
-
-
-
     </>
   );
 }

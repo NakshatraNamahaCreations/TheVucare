@@ -53,7 +53,7 @@ export default function Register() {
         let res = await axios(config);
 
         if (res.status === 200) {
-          alert("Succesfully added");
+          alert("You have signed in succesfully");
           window.location.href = "/";
         }
       } catch (err) {
@@ -125,14 +125,14 @@ export default function Register() {
                   onChange={(e) => setphonenumber(e.target.value)}
                 />
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Password"
                   value={Password}
                   onChange={(e) => setpassword(e.target.value)}
                 />
                 <input
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  type="text"
+                  type="password"
                   placeholder="Confirm Password"
                   value={ConfirmPassword}
                 />

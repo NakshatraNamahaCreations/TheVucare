@@ -182,27 +182,25 @@ export default function Layout() {
       {
         breakpoint: 800,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           adaptiveHeight: true,
           centerMode: true,
-          variableWidth: 6,
           dots: true,
           arrows: true,
           lazyLoad: "ondemand",
-          mobileOverlap: true,
+          margin: -2,
         },
       },
       {
         breakpoint: 767,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           adaptiveHeight: true,
           centerMode: true,
-          variableWidth: 6,
           dots: true,
           arrows: true,
           lazyLoad: "ondemand",
-          mobileOverlap: true,
+          margin: -2,
         },
       },
     ],
@@ -239,8 +237,6 @@ export default function Layout() {
   const handleServiceSelection = (service) => {
     setSelectedService(service);
   };
-
-  let UserContct = userData?.mainContact;
 
   const sendWhatsAppMessage = (recipient, service) => {
     const apiEndpoint = "https://api.whatsapp.com/send";
@@ -375,12 +371,12 @@ export default function Layout() {
                 </button>{" "}
               </div>
 
-              <div className="row mt-3 m-auto slick-listsd just-for-you-slider">
+              <div className="row mt-3 m-auto slick-listsd slick-sliders  just-for-you-slider">
                 <Slider {...justforyou}>
                   {Banner.map((item) => (
-                    <div key={item._id} className="m-auto">
+                    <div key={item._id} className="m-auto ">
                       <img
-                        className="col-md-11 m-auto  responsive-brimg "
+                        className="col-md-11 m-1 m-auto  imgbnr  " style={{borderRadius:"20px"}}
                         width={380}
                         height={180}
                         src={`http://api.thevucare.com/webBanner/${item.banner}`}

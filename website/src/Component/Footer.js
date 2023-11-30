@@ -22,8 +22,8 @@ export default function Footer() {
                   <img
                     className="brd"
                     alt=""
-                    src="..\assests\Screenshot_4-removebg-preview.png"
-                    width={216}
+                    src="..\images\vucarpng.png"
+                    // width={180}
                     height={36}
                   />
                 </div>
@@ -93,7 +93,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="row m-auto p-ab">
+        {/* <div className="row m-auto p-ab">
           <div className="col-md-1  p-fx p-fx-top " onClick={openWhatsapp}>
             {" "}
             <img
@@ -103,6 +103,48 @@ export default function Footer() {
               height={80}
               src="..\images\wicon1 (1).png"
             />
+          </div>
+        </div> */}
+
+        <div className="col-md-4">
+          {" "}
+          <div className="row">
+            <div className="col-md-1 clr fnt me-2">
+              <img
+                alt=""
+                className="cursor-pointer clrc"
+                onClick={openWhatsapp}
+                src="..\images\wicon1 (1).png"
+                width={50}
+                height={50}
+              />
+            </div>
+            <div className="col-md-1 clr fnt me-2">
+              {" "}
+              <a href="https://www.instagram.com/vucareservices/">
+                <img
+                  className="clrc"
+                  alt=""
+                  src="..\images\wicon1 (2).png"
+                  width={50}
+                  height={50}
+                />
+              </a>
+            </div>
+            <div className="col-md-1">
+              <a
+                className="clr fnt me-2"
+                href="https://www.facebook.com/vucareservices?mibextid=kFxxJD"
+              >
+                <img
+                  className="clrc"
+                  alt=""
+                  src="..\images\wicon1 (3).png"
+                  width={50}
+                  height={50}
+                />
+              </a>
+            </div>
           </div>
         </div>
       </div>

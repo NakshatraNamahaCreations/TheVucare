@@ -8,7 +8,7 @@
 .area label input {
   display: none;
 }
-.wrong_price{
+.wrong_price {
   font-size: 15px !important;
 }
 
@@ -54,12 +54,25 @@
   border-radius: 20px;
 }
 .valudwidth {
-  width: fit-content !important;
+  width: fit-content;
 }
 .data_container {
   border-right: 3px solid #03b162;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
 }
-@media (max-width: 767px) {
+@media only screen and (max-width: 767px) {
+  .valudwidth {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    font-size: 12px;
+    padding: 10px;
+  }
+  .res-header-logo {
+    height: 200px;
+    border-radius: 2px;
+  }
+  .modalend{
+    top: 5%;
+  }
 }
