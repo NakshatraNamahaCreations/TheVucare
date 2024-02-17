@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const serviceManagementModel = require("../../model/userapp/serviceMangament");
 
 class serviceManagement {
@@ -20,13 +21,11 @@ class serviceManagement {
 
       servicebelow,
       servicetitle,
-    
+
       qty,
       quantity,
-      rating
+      rating,
     } = req.body;
-
-  
 
     const parsedServiceDesc = JSON.parse(serviceDesc);
     const parsedServiceExcludes = JSON.parse(serviceExcludes);
@@ -65,8 +64,8 @@ class serviceManagement {
       Eximg: file3,
       qty,
       quantity,
-   
-      rating
+
+      rating,
     });
     // let save = add.save();
     // Save the user
@@ -214,7 +213,7 @@ class serviceManagement {
         serviceHour,
         sAddons,
         NofServiceman,
-        rating
+        rating,
       } = req.body;
       const file = req.file?.filename;
 
@@ -231,29 +230,26 @@ class serviceManagement {
       findService.rating = rating || findService.rating;
       findService.sub_subcategory =
         sub_subcategory || findService.sub_subcategory;
-        findService.servicetitle =servicetitle||findService.servicetitle;
-        findService.servicebelow = servicebelow||findService.servicebelow;
+      findService.servicetitle = servicetitle || findService.servicetitle;
+      findService.servicebelow = servicebelow || findService.servicebelow;
 
-        findService.serviceDesc = Array.isArray(serviceDesc)
+      findService.serviceDesc = Array.isArray(serviceDesc)
         ? serviceDesc.map((i) => (i ? JSON.parse(i) : null)).filter(Boolean)
         : serviceDesc
-          ? [JSON.parse(serviceDesc)]
-          : findService.serviceDesc;
-      
-     
-      
+        ? [JSON.parse(serviceDesc)]
+        : findService.serviceDesc;
+
       findService.serviceIncludes = Array.isArray(serviceIncludes)
         ? serviceIncludes.map((i) => (i ? JSON.parse(i) : null)).filter(Boolean)
         : serviceIncludes
-          ? [JSON.parse(serviceIncludes)]
-          : findService.serviceIncludes;
-      
+        ? [JSON.parse(serviceIncludes)]
+        : findService.serviceIncludes;
+
       findService.serviceExcludes = Array.isArray(serviceExcludes)
         ? serviceExcludes.map((i) => (i ? JSON.parse(i) : null)).filter(Boolean)
         : serviceExcludes
-          ? [JSON.parse(serviceExcludes)]
-          : findService.serviceExcludes;
-      
+        ? [JSON.parse(serviceExcludes)]
+        : findService.serviceExcludes;
 
       findService.homepagetitle = homepagetitle || findService.homepagetitle;
       findService.serviceGst = serviceGst || findService.serviceGst;
@@ -328,7 +324,6 @@ class serviceManagement {
     let serviceId = req.params.id;
     let { category, serviceName, videoLink } = req.body;
 
-    
     let findService = await serviceManagementModel.findOne({
       _id: serviceId,
     });
@@ -357,6 +352,7 @@ class serviceManagement {
       return res.json({ service: service });
     }
   }
+
 
   async postsubcategory(req, res) {
     let { subcategory } = req.body;

@@ -5,11 +5,14 @@ import Google from "./../../Assets/Images/google.svg";
 import Apple from "./../../Assets/Images/apple.svg";
 import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
+// import { ReactApi } from "../../api";
 // import Header from "../Header/Header";
 import axios from "axios";
 import NabarCompo from "../navbar";
 
 export default function Login() {
+  const ReactApi = process.env.REACT_APP_API_URL;
+  const ImagApi = process.env.REACT_APP_IMAGE_API_URL;
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const onSubmit = (data, e) => console.log(data, e);
@@ -42,7 +45,7 @@ export default function Login() {
       const config = {
         url: "/usersign",
         method: "post",
-        baseURL: "http://api.thevucare.com/api",
+        baseURL: `${ReactApi}`,
         headers: { "Content-Type": "application/json" },
         data: {
           email: Email,

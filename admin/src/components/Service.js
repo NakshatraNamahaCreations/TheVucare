@@ -259,7 +259,7 @@ function Services() {
 
   const getsubcategory = async () => {
     let res = await axios.post(
-      `http://api.thevucare.com/api  /userapp/postappresubcat/`,
+      `http://api.thevucare.com/api/userapp/postappresubcat/`,
       {
         subcategory: Subcategory,
       }
@@ -441,7 +441,7 @@ function Services() {
 
   const postsubcategory = async () => {
     let res = await axios.post(
-      `http://api.thevucare.com/api  /userapp/postappsubcat/`,
+      `http://api.thevucare.com/api/userapp/postappsubcat/`,
       {
         category: category,
       }

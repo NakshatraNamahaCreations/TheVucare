@@ -12,8 +12,14 @@ import { Modal } from "react-bootstrap";
 import { Button, Form } from "react-bootstrap";
 import Header from "./Header";
 import { ColorRing } from "react-loader-spinner";
+import Footer from "./Footer";
+// import { ReactApi } from "../api";
+// import { ImagApi } from "../api";
 
+import "react-multi-carousel/lib/styles.css";
 export default function Layout() {
+  const ReactApi = process.env.REACT_APP_API_URL;
+  const ImagApi = process.env.REACT_APP_IMAGE_API_URL;
   const [Banner, setBanner] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [category, setCategory] = useState([]);
@@ -37,9 +43,7 @@ export default function Layout() {
   const GetAllWebBanner = async () => {
     try {
       setIsLoading(true);
-      let res = await axios.get(
-        "http://api.thevucare.com/api/website/getallwebbanner"
-      );
+      let res = await axios.get(`${ReactApi}/website/getallwebbanner`);
 
       if (res.status === 200) {
         setBanner(res.data.banner);
@@ -64,9 +68,7 @@ export default function Layout() {
   const getsubcategory = async () => {
     try {
       setIsLoading(true);
-      let res = await axios.get(
-        `http://api.thevucare.com/api/userapp/getappsubcat`
-      );
+      let res = await axios.get(`${ReactApi}/userapp/getappsubcat`);
 
       if ((res.status = 200)) {
         setCategoryData(res.data.subcategory);
@@ -87,7 +89,7 @@ export default function Layout() {
   const getAllCategory = async () => {
     try {
       setIsLoading(true);
-      let res = await axios.get("http://api.thevucare.com/api/getcategory");
+      let res = await axios.get(`${ReactApi}/getcategory`);
       if (res.status === 200) {
         const firstInFirstOut = res.data.category.reverse();
         setCategory(firstInFirstOut);
@@ -103,19 +105,19 @@ export default function Layout() {
     item?.category?.toLowerCase()?.includes("cleaning")
   )?.length;
 
-  const actualCleaningSlidesToShow = Math?.min(cleaningItemsCount, 6);
+  const actualCleaningSlidesToShow = Math?.min(cleaningItemsCount, 5);
 
   const pestControlItemsCount = categoryData?.filter((item) =>
     item?.category?.toLowerCase()?.includes("control")
   )?.length;
 
-  const actualPestControlSlidesToShow = Math.min(pestControlItemsCount, 6);
+  const actualPestControlSlidesToShow = Math.min(pestControlItemsCount, 5);
 
   const paintingcontorl = categoryData.filter((item) =>
     item?.category?.toLowerCase()?.includes("painting")
   )?.length;
 
-  const painitnca = Math.min(paintingcontorl, 6);
+  const painitnca = Math.min(paintingcontorl, 5);
 
   const commonSliderSettings = {
     className: "common-slider",
@@ -127,11 +129,12 @@ export default function Layout() {
     autoplaySpeed: 3000,
     cssEase: "ease-in-out",
     initialSlide: 1,
+
     responsive: [
       {
         breakpoint: 800,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           adaptiveHeight: true,
           centerMode: true,
           dots: true,
@@ -148,6 +151,7 @@ export default function Layout() {
           dots: true,
           arrows: true,
           lazyLoad: "ondemand",
+          centerPadding: 5,
         },
       },
     ],
@@ -188,7 +192,6 @@ export default function Layout() {
           dots: true,
           arrows: true,
           lazyLoad: "ondemand",
-          margin: -2,
         },
       },
       {
@@ -200,11 +203,13 @@ export default function Layout() {
           dots: true,
           arrows: true,
           lazyLoad: "ondemand",
-          margin: -2,
+          centerPadding: "40px",
+          mobileFirst: true,
         },
       },
     ],
   };
+
   const [showModal, setShowModal] = useState(false);
 
   const handleShow = () => {
@@ -249,6 +254,7 @@ export default function Layout() {
   const handleSubmit = () => {
     sendWhatsAppMessage("9980670037", selectedService);
   };
+
   return (
     <>
       {isLoading ? (
@@ -261,7 +267,7 @@ export default function Layout() {
               height="80"
               width="80"
               ariaLabel="blocks-loading"
-              wrapperStyle={{}}
+              // wrapperStyle={{}}
               wrapperClass="blocks-wrapper"
               colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
             />
@@ -272,69 +278,22 @@ export default function Layout() {
         <>
           <Header />
 
-          <div className="container ">
-            {/* <div className="row     ">
-              <div className="col-md-3   clr2  ">
-                <div className="row r  p-2 m-1  brclr">
-                  <div className="col-md-6  m-auto ">
-                    <p className="row fs-5    fsd   clr3 boldt1 text-white">
-                      Our Motive Is To Make You
-                    </p>
-                  </div>
-                  <div className="col-md-5">
-                    <img
-                      className="crdbor brclr responsive-img  firstcart imgs"
-                      src="..\assests\house.avif"
-                      alt=""
-                    />
-                  </div>
-                  <div>
-                    <p className="row  p-1 mtchan  textsi fsd  clr3 boldt1 text-white">
-                      Comfort In Your Home
-                    </p>
-                  </div>
-                  <div className="row  m-auto">
-                    <button className="col-md-6 imgbr boldt1  m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
-                      Contact Us
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {category.reverse()?.map((ele) => (
-                <div className="col-md-2 responsive-categoyr     clr2 clr3 crdbor p-3  m-auto   cursor">
-                  <Link
-                    className="row m-auto"
-                    onClick={() => filtercatsub(ele.category)}
-                  >
-                    <img
-                      className="col-md-6 imgsub "
-                      width={50}
-                      height={50}
-                      categoryImg
-                      src={`http://api.thevucare.com/category/${ele?.categoryImg}`}
-                      alt=""
-                    />{" "}
-                  </Link>
-                  <div className="row m-auto">
-                    {" "}
-                    <p className="col-md-12   fnt14 textsi  boldt">
-                      {ele?.category}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div> */}
-            <div className="row  clr2 shadow p-5 ">
+          <div className="row m-auto ">
+            <div className="row m-auto  clr2 shadow p-5 ">
               <div className="row   text-center m-auto  ">
                 <div className="col-md-4 p-2 brclr medis1">
-                  <p className="row   fnt22 clr3 ">
+                  <p className="row   fnt22 clr3 pheading">
                     Our Motive Is To Make You Comfort In Your Home{" "}
                   </p>
                   <div className="row  m-auto">
-                    <button className="col-md-6 imgbr boldt1  m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
-                      Contact Us
-                    </button>
+                    <a
+                      href={`tel:${917760120037}`}
+                      className="text-decoration-none"
+                    >
+                      <button className="col-md-6 imgbr boldt1   m-auto mb-3 p-2 btn yellw clr2 grndclr  ">
+                        Contact Us
+                      </button>
+                    </a>
                   </div>
                 </div>
                 {category.reverse()?.map((ele) => (
@@ -343,16 +302,16 @@ export default function Layout() {
                       className="row m-auto linksty"
                       onClick={() => filtercatsub(ele.category)}
                     >
-                      <div className="row ">
+                      <div className="row mt-5">
                         <img
-                          className="col-md-4  p-2  m-auto bg-white logostyl "
-                          width={40}
-                          height={40}
-                          src={`http://api.thevucare.com/category/${ele?.categoryImg}`}
+                          className="col-md-4 mobilescreen-category-img p-1  m-auto bg-white logostyl "
+                          width={180}
+                          height={180}
+                          src={`${ImagApi}/category/${ele?.categoryImg}`}
                           alt=""
                         />{" "}
                       </div>
-                      <p className=" fnt14 textsi mt-2 clr3  boldt">
+                      <p className="m-auto text-center fnt14 textsi mt-2 clr3  boldt">
                         {ele?.category}
                       </p>{" "}
                     </Link>{" "}
@@ -360,26 +319,25 @@ export default function Layout() {
                 ))}
               </div>
             </div>
-            <div className="row m-auto ">
-              <div className="col-md-3"></div>
-            </div>
-            <div className="row  m-auto  mt-5 ">
-              <h2 className="text-center boldt">Just For You</h2>
-              <div className="row text-center">
-                <button className="col-md-2 m-auto btnd btns_all clr3 clr2 yellw1 p-2 boldbtn">
-                  Newly Lounched
+
+            <div className="row text-center  mt-5 ">
+              <h2 className=" m-auto boldt">Just For You</h2>
+              <div className="row text-center m-auto  ">
+                <button className="col-md-2  m-auto btnd btns_all clr3 clr2 yellw1 p-2 boldbtn">
+                  Newly launched
                 </button>{" "}
               </div>
 
-              <div className="row mt-3 m-auto slick-listsd slick-sliders  just-for-you-slider">
-                <Slider {...justforyou}>
+              <div className="row mt-3  m-auto slick-listsd slick-listsd3 slick-sliders just-for-you-slider">
+                <Slider {...justforyou} className="mobile-screen-margin">
                   {Banner.map((item) => (
-                    <div key={item._id} className="m-auto ">
+                    <div key={item._id} className="row m-auto m-1">
                       <img
-                        className="col-md-11 m-1 m-auto  imgbnr  " style={{borderRadius:"20px"}}
-                        width={380}
+                        className="col-md-11 m-1 imgbnr p-0"
+                        style={{ borderRadius: "20px" }}
+                        width={480}
                         height={180}
-                        src={`http://api.thevucare.com/webBanner/${item.banner}`}
+                        src={`${ImagApi}/webBanner/${item.banner}`}
                         alt=""
                       />
                     </div>
@@ -390,14 +348,14 @@ export default function Layout() {
             <div className="row  m-auto   mt-5 ">
               <h2 className="text-center boldt">Pest Control</h2>
 
-              <div className="row mt-3 slick-listsd slick-listsd1 slick-sliders common-slider">
+              <div className="row slick-listsd mt-3 slick-listsd1 slick-sliders common-slider">
                 <Slider {...pestControlSettings}>
                   {categoryData
                     .filter((item) =>
                       item.category.toLowerCase().includes("control")
                     )
                     .map((item) => (
-                      <div key={item._id} className="m-auto  linksty">
+                      <div key={item._id} className="row m-auto  linksty">
                         <Link
                           className="linksty"
                           to="/servicedetails"
@@ -405,13 +363,13 @@ export default function Layout() {
                           key={item.subcategory}
                         >
                           <img
-                            width={150}
-                            height={150}
-                            src={`http://api.thevucare.com/subcat/${item?.subcatimg}`}
-                            className=" m-1 shadow bg-white rounded "
+                            width={200}
+                            height={200}
+                            src={`${ImagApi}/subcat/${item?.subcatimg}`}
+                            className="m-auto m-1 shadow bg-white rounded "
                             alt=""
                           />
-                          <p className="col-md-11 m-1 text-center m-auto p-2 boldt">
+                          <p className="col-md-8 m-auto m-1 text-center  p-2 boldt">
                             {item.subcategory}
                           </p>
                         </Link>
@@ -419,6 +377,35 @@ export default function Layout() {
                     ))}
                 </Slider>
               </div>
+              {/* <div className="row">
+                <MultiCarousel showDots={true} responsive={responsive}>
+                  {categoryData
+                    .filter((item) =>
+                      item.category.toLowerCase().includes("control")
+                    )
+                    .map((item) => (
+                      <div key={item._id} className="col-md-4 m-auto  linksty">
+                        <Link
+                          className="linksty"
+                          to="/servicedetails"
+                          state={{ subcategory: item?.subcategory }}
+                          key={item.subcategory}
+                        >
+                          <img
+                            width={200}
+                            height={200}
+                            src={`${ImagApi}/subcat/${item?.subcatimg}`}
+                            className="m-auto m-1 shadow bg-white rounded "
+                            alt=""
+                          />
+                          <div className="row m-auto  text-center  mt-1 ">
+                            <p clas > {item.subcategory}</p>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                </MultiCarousel>
+              </div> */}
             </div>
             <div className="row m-auto   mt-5">
               <Card className="borderrad">
@@ -430,21 +417,21 @@ export default function Layout() {
               </Card>
             </div>
 
-            <div className="row m-auto   mt-5 ">
+            <div className="row    mt-5 ">
               <h2 className="text-center">Cleaning Services</h2>
               <div className="row text-center">
                 <button className="col-md-3 m-auto btnd btns_all clr3 clr2 p-2 yellw1 boldbtn">
                   30% Less Than Market Price
                 </button>{" "}
               </div>
-              <div className="row mt-5 slick-listsd slick-listsd1 slick-sliders common-slider">
+              <div className="row  mt-5 slick-listsd slick-listsd1 slick-sliders common-slider">
                 <Slider {...cleaningSettings}>
                   {categoryData
                     .filter((item) =>
                       item.category.toLowerCase().includes("cleaning ")
                     )
                     .map((ele) => (
-                      <div key={ele._id} className="m-auto  linksty">
+                      <div key={ele._id} className="row m-auto  linksty">
                         <Link
                           className="linksty"
                           to="/servicedetails"
@@ -453,10 +440,10 @@ export default function Layout() {
                         >
                           {" "}
                           <img
-                            width={150}
-                            height={150}
-                            src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
-                            className=" m-1  shadow bg-white rounded "
+                            width={200}
+                            height={200}
+                            src={`${ImagApi}/subcat/${ele?.subcatimg}`}
+                            className=" m-auto  m-1  shadow bg-white rounded "
                             alt=""
                           />
                           <p className="col-md-11 m-1 text-center m-auto p-2 boldt">
@@ -483,7 +470,7 @@ export default function Layout() {
                       item.category.toLowerCase().includes("painting")
                     )
                     .map((ele) => (
-                      <div key={ele._id} className="m-auto  linksty">
+                      <div key={ele._id} className="row m-auto  linksty">
                         <Link
                           className="linksty"
                           to="/servicedetails"
@@ -492,13 +479,13 @@ export default function Layout() {
                         >
                           {" "}
                           <img
-                            width={150}
-                            height={150}
-                            src={`http://api.thevucare.com/subcat/${ele?.subcatimg}`}
-                            className=" m-1 shadow bg-white rounded "
+                            width={200}
+                            height={200}
+                            src={`${ImagApi}/subcat/${ele?.subcatimg}`}
+                            className="m-auto  m-1 shadow bg-white rounded "
                             alt=""
                           />
-                          <p className="text-center m-auto p-2 boldt">
+                          <p className="col-md-11 m-1 text-center m-auto p-2 boldt">
                             {ele.subcategory}
                           </p>
                         </Link>
@@ -515,10 +502,13 @@ export default function Layout() {
 
             <Review />
 
-            <div className="row me-0  m-auto mt-5 mb-5 p-1 p-re">
+            <div
+              className="col-md-12 m-auto   mt-5 mb-5 "
+              style={{ position: "relative" }}
+            >
               <h2 className="text-center boldt">Why Choose Us?</h2>
 
-              <div className="container  mt-3 p-5 rdiu clr2 p-5">
+              <div className="row m-auto mt-3 p-3 rdiu clr2 p-5">
                 <p className="yellw1 fs-4">Exceptional Expertise:</p>
                 <p className="clr3 fsd">
                   Our home services company boasts a team of highly skilled
@@ -541,30 +531,34 @@ export default function Layout() {
                   hands.
                 </p>
               </div>
-              <div className="row   m-auto p-ab p-ab-top">
-                <div className="col-md-2 responsive-brimg  m-auto p-1 text-center  rdiu2">
-                  <img
-                    width={50}
-                    height={50}
-                    src="..\assests\icons8-expert-48.png"
-                  />
-                  <p className="grndclr boldt ">Experts Only </p>
-                </div>
-                <div className="col-md-2 responsive-brimg  m-auto  p-1 text-center rdiu2">
-                  <img
-                    width={50}
-                    height={50}
-                    src="..\assests\icons8-house-48.png"
-                  />
-                  <p className="grndclr boldt ">Fully Equipped </p>
-                </div>
-                <div className="col-md-2 responsive-brimg  m-auto text-center p-1 rdiu2">
-                  <img
-                    width={50}
-                    height={50}
-                    src="..\assests\icons8-business-team-61.png"
-                  />
-                  <p className="grndclr boldt ">No Subcontract </p>
+              {/* p-ab p-ab-top */}
+              <div className="col-md-6 text-center m-auto p-ab p-ab-top">
+                <div className="row   m-auto ">
+                  <div className="col-md-3 m-1 responsive-brimg  m-auto  text-center rdiu2">
+                    <img
+                      width={50}
+                      height={50}
+                      src="..\assests\icons8-expert-48.png"
+                    />
+                    <p className="grndclr boldt fnt12">Experts Only </p>
+                  </div>
+                  <div className="col-md-3 m-1 marginleft responsive-brimg  m-auto  text-center rdiu2">
+                    <img
+                      width={50}
+                      height={50}
+                      src="..\assests\icons8-house-48.png"
+                    />
+                    <p className="grndclr boldt fnt12">Fully Equipped </p>
+                  </div>
+
+                  <div className="col-md-3 m-1 marginleft responsive-brimg  m-auto  text-center rdiu2">
+                    <img
+                      width={50}
+                      height={50}
+                      src="..\assests\icons8-business-team-61.png"
+                    />
+                    <p className="grndclr boldt fnt12">No Subcontract </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -615,13 +609,11 @@ export default function Layout() {
                         key={item.subcategory}
                       >
                         <img
-                          className="mt-2 brd"
-                          src={`http://api.thevucare.com/subcat/${item.subcatimg}`}
-                          width="100%"
-                          height="100px"
+                          className="mt-2 imgbr2"
+                          src={`${ImagApi}/subcat/${item.subcatimg}`}
                           alt=""
                         />
-                        <p className="p-1 text-black linksty widthsub ">
+                        <p className="row  p-2 text-black linksty widthsub ">
                           {item.subcategory}
                         </p>
                       </Link>
@@ -667,6 +659,7 @@ export default function Layout() {
           </Modal>
         </>
       )}
+      <Footer />
     </>
   );
 }

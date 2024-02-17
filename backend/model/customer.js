@@ -90,6 +90,7 @@ const customerSchema = new mongoose.Schema(
     selectedSlotText: {
       type: String,
     },
+    customerprofile: { type: String },
     deliveryAddress: {
       type: [
         {
@@ -103,7 +104,6 @@ const customerSchema = new mongoose.Schema(
       ],
       default: [], // Default value is an empty array
     },
-
   },
   {
     timestamps: true,

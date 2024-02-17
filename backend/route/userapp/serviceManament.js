@@ -20,6 +20,7 @@ router.post(
   ServiceManagemntController.addserviceManagement
 );
 router.get("/getservices", ServiceManagemntController.getserviceManagement);
+// router.get("/getparticulardata/:idd", ServiceManagemntController.getParticulardata);
 router.post(
   "/editservices/:id",
   ServiceManagemntController.editserviceManagement

@@ -7,8 +7,8 @@
   font-weight: bolder !important;
 }
 .bgimg {
-  min-height: 80vh;
-  background-image: url("../../public/assests/bghe.jpg");
+  /* min-height: 40vh; */
+  background-image: url("../../public/NewImg/bg.jpg");
   background-repeat: no-repeat;
   max-width: 100%;
   min-width: fit-content;
@@ -35,7 +35,6 @@ a,
 }
 
 .clr {
-  /* color: black; */
   font-weight: 300;
   font-size: 20px;
 }
@@ -81,9 +80,10 @@ a,
 }
 
 .slick-sliders {
-  width: auto;
+  width: 100%;
   margin: auto;
 }
+
 .slick-listsd {
   display: flex;
   justify-content: space-around;
@@ -228,6 +228,7 @@ a,
 
 .p-ab {
   position: absolute;
+  left: 25%;
 }
 .p-fx {
   position: fixed;
@@ -237,7 +238,7 @@ button {
 }
 .p-fx-top {
   top: 90%;
-  /* bottom: 50%; */
+
   right: 0%;
 }
 
@@ -265,13 +266,20 @@ button {
   width: 150px;
   height: 150px;
 }
+.selectcity:hover {
+  background-color: #0b5ed7;
+  color: white;
+}
 
 .drop_dow {
   position: absolute;
   height: 20vh;
+  top: 75%;
   overflow-y: scroll;
   z-index: 100;
-
+}
+.relativeP {
+  position: relative !important;
 }
 .p {
   margin-bottom: 0 !important;
@@ -323,13 +331,64 @@ button {
   font-size: 18px;
   font-weight: bolder;
 }
-/* Mobile view styles */
+.review {
+  border-radius: 10px !important;
+}
+.category {
+  display: none;
+}
+.imgbr2 {
+  width: 100%;
+  height: 100px;
+}
 
-@media only screen and (max-width: 767px) {
-  .slick-sliders {
-    width: none !important;
-    margin: auto;
+.logos {
+  display: grid;
+  grid-template-columns: repeat(8, auto);
+}
+@media only screen and (min-width: 200px) and (max-width: 767px) {
+  .subcss {
+    width: 120px;
+    height: auto;
   }
+  .marginleft {
+    margin-left: 5px !important;
+  }
+  .mobilescreen-heading {
+    color: white;
+  }
+  .mobilescreen-category-img {
+    text-align: center;
+  }
+  .mobile-screen-margin {
+    margin-top: 20px !important;
+  }
+  .butn {
+    width: 200px;
+  }
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+  }
+  .imgbr2 {
+    height: 60px;
+  }
+  .imgbnr {
+    margin: 5px !important;
+    width: 200px !important;
+    height: 100px !important;
+  }
+  .category {
+    display: block;
+  }
+  .p-ab {
+    left: 7%;
+  }
+  .slick-sliders {
+    width: none;
+    margin: auto !important;
+  }
+
   .cart_item_box1 {
     width: fit-content !important;
     margin: auto;
@@ -350,13 +409,11 @@ button {
     margin: auto;
   }
 
-  .imgbnr {
-    margin: 5px !important;
-    width: 200px !important;
-    height: 100px !important;
-  }
   .medis1 {
     border-radius: 15px;
+  }
+  .pheading {
+    padding: 5px;
   }
 
   .firstcart {
@@ -432,4 +489,21 @@ button {
   .rdiu2 {
     font-size: 13px;
   }
+  .resfooter {
+    display: grid;
+    grid-template-columns: repeat(3, 50px);
+    justify-content: center;
+  }
+  .resfooter2 {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: auto;
+  }
+
+  .review {
+    margin-top: 15px;
+    padding: 0px;
+  }
+ 
 }

@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-import Form from "react-bootstrap/Form";
 import axios from "axios";
 import img from "./img/Flag-India.webp";
 import NabarCompo from "./navbar";
-import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 import "./header.css";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
+// import { ReactApi } from "../api";
+// import { ImagApi } from "../api";
 
 export default function Header() {
   const [city, setCity] = useState([]);
   const [SearchSubCategory, setSearchSubCategory] = useState("");
   const [SearchSubCategoryd, setSearchSubCategoryD] = useState([]);
   const [isDropdownEnabled, setIsDropdownEnabled] = useState(true);
+  const [isSearhcEnabled, setIsSearhcEnabled] = useState(false);
   const [CategoryData, setCategoryData] = useState([]);
-  const [openResetModal, setOpenResetModal] = useState(false);
-
+  const ReactApi = process.env.REACT_APP_API_URL;
+  const ImagApi = process.env.REACT_APP_IMAGE_API_URL;
+  
   useEffect(() => {
     getCity();
     getsubcategory();
@@ -26,7 +27,7 @@ export default function Header() {
   const getsubcategory = async () => {
     try {
       let res = await axios.get(
-        `http://api.thevucare.com/api/userapp/getappsubcat`
+        `${ReactApi}/userapp/getappsubcat`
       );
 
       if ((res.status = 200)) {
@@ -38,7 +39,7 @@ export default function Header() {
   };
   const getCity = async () => {
     try {
-      let res = await axios.get("http://api.thevucare.com/api/master/getcity");
+      let res = await axios.get(`${ReactApi}/master/getcity`);
       if (res.status === 200) {
         setCity(res.data.mastercity);
       }
@@ -80,11 +81,11 @@ export default function Header() {
   });
 
   const handleResetModal = () => {
-    setOpenResetModal(!openResetModal);
+    setIsSearhcEnabled(!isSearhcEnabled);
   };
   const handleChange = (e) => {
     setSelectedOption(e);
-    setOpenResetModal(false);
+    setIsSearhcEnabled(false);
   };
 
   const handleSearch = (e) => {
@@ -101,9 +102,21 @@ export default function Header() {
     const subcategories = filterData.map((ele) => ele.subcategory);
     setSearchSubCategoryD(subcategories);
   };
+
   const handleSubcategorySelect = (ele) => {
     setSearchSubCategory(ele);
+
     setIsDropdownEnabled(true);
+    if (SearchSubCategory === "" || selectedOption?.city?.length === 0) {
+      alert("Please Select city or service");
+    } else {
+      navigate("/servicedetails", {
+        state: {
+          subcategory: ele,
+          SelecteddCity: selectedOption.city,
+        },
+      });
+    }
   };
 
   const CustomInputBase = styled(InputBase)(({ theme }) => ({
@@ -124,6 +137,7 @@ export default function Header() {
       padding: "8px 12px",
     },
   }));
+
   const navigate = useNavigate();
   const handleLinkClick = () => {
     if (SearchSubCategory === "" || selectedOption?.city?.length === 0) {
@@ -144,18 +158,32 @@ export default function Header() {
         <NabarCompo />
         <div className="container mt-5 ">
           <div className="row justify-content-end">
-            <div className="col-md-6  mt-5">
+            <div className="col-md-7  mt-5">
               <div className="row m-auto">
-                <h3 className="fnt  fw-bolder">
-                  Ultimate Level Of Cleaning Power
-                </h3>{" "}
-              </div>{" "}
-            </div>{" "}
+                <h4 className="fnt  fw-bolder mobilescreen-heading">
+                  Complete Home Excellence Pest Control & Cleaning & Painting
+                  and Garden Maintenance.
+                </h4>
+              </div>
+            </div>
+          </div>
+          <div className="row text-center  mt-3">
+            <div className="col-md-5"></div>
+            <div className="col-md-2 m-auto ">
+              <a
+                href={`tel:${917760120037}`}
+                className="row text-decoration-none"
+              >
+                <button className="row imgbr boldt1 butn p-2 m-auto   yellw clr2 grndclr  ">
+                  Contact Us
+                </button>
+              </a>
+            </div>
           </div>
           <div className="row   justify-content-end">
             <div className="col-md-7 mt-5 ">
               <div className="row inputbox">
-                <div className="col-md-4">
+                <div className="col-md-4" style={{ position: "relative" }}>
                   <CustomInputBase
                     className="shadow-sm me-1   bg-white"
                     readOnly
@@ -188,9 +216,23 @@ export default function Header() {
                       </svg>
                     }
                   />
+                  {isSearhcEnabled && (
+                    <div className="drop_dow col-md-11  shadow-sm p-1 mb-5 bg-white ">
+                      {city.map((city) => {
+                        return (
+                          <div
+                            className="city-name"
+                            onClick={() => handleChange(city)}
+                          >
+                            <p className="selectcity ">{city.city}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
-                <div className="col-md-7 responvm">
+                <div className="col-md-7 responvm relativeP">
                   <input
                     placeholder="Search for services"
                     value={SearchSubCategory}
@@ -199,7 +241,6 @@ export default function Header() {
                       if (event.key === "Enter") {
                         event.preventDefault();
                         handleLinkClick();
-                        console.log(event.key, "event.key");
                       }
                     }}
                     type="search"
@@ -209,7 +250,7 @@ export default function Header() {
                       className={` ${
                         !SearchSubCategoryd
                           ? ""
-                          : "drop_dow shadow-sm p-3 mb-5 bg-white rounded"
+                          : "drop_dow col-md-11 m-auto shadow-sm p-2 mb-5 bg-white "
                       }`}
                     >
                       {SearchSubCategoryd?.map((ele) => (
@@ -228,36 +269,6 @@ export default function Header() {
             </div>
           </div>
         </div>
-        <Modal open={openResetModal} onClose={handleResetModal}>
-          <div className="modal_wrapper select-city-modal">
-            <div className="modal_header ">
-              <div className="col-12">
-                <span>Let's choose</span>
-                <p>Your Location</p>
-              </div>
-            </div>
-
-            <div className="modal_body">
-              <div className="title text-center">India</div>
-              <div className="row">
-                {city.map((city) => {
-                  return (
-                    <div className="col-lg-2 col-md-3 col-sm-4">
-                      <div
-                        className="city-name"
-                        onClick={() => handleChange(city)}
-                      >
-                        <img src="" alt="" />
-
-                        <p className="p-1">{city.city}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </Modal>
       </div>
     </>
   );

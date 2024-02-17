@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./summary.scss";
-import { useSelector } from "react-redux";
-import axios from "axios";
 
+import axios from "axios";
+// import {ReactApi} from "../../../../api"
 import { useLocation } from "react-router-dom";
 export default function Summary() {
   //   const cartItems = useSelector(selectCartItems);
+  const ReactApi = process.env.REACT_APP_API_URL;
+  const ImagApi = process.env.REACT_APP_IMAGE_API_URL;
   const location = useLocation();
   const selectedCategorybhk = new URLSearchParams(location.search).get("bhk");
   const [Service, setService] = useState([]);
@@ -20,7 +22,7 @@ export default function Summary() {
   const getAllServices = async () => {
     try {
       let res = await axios.get(
-        "http://api.thevucare.com/api/userapp/getservices"
+        `${ReactApi}/userapp/getservices`
       );
       if (res.status === 200) {
         setService(res.data.service);
@@ -58,7 +60,7 @@ export default function Summary() {
   const getVoucher = async () => {
     try {
       let res = await axios.get(
-        `http://api.thevucare.com/api/userapp/getvoucher`
+        `${ReactApi}/userapp/getvoucher`
       );
       if (res.status === 200) {
         setVoucher(res.data.voucher);

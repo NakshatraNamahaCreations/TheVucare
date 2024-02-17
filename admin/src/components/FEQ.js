@@ -77,7 +77,7 @@ function FEQ() {
       console.log(res.data?.feq);
       setImages(
         res.data?.feq.map((element) => {
-          return `http://api.thevucare.com/api  /userbanner/${element.img[0].contentType}`;
+          return `http://api.thevucare.com/api/userbanner/${element.img[0].contentType}`;
         })
       );
     }

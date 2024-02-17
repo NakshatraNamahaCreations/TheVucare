@@ -32,6 +32,9 @@ class addcustomer {
       serviceExecute,
       selectedSlotText,
     } = req.body;
+
+    let file = req.file?.filename;
+   
     try {
       // Get the latest card number from the database
       const latestCustomer = await customerModel
@@ -47,6 +50,7 @@ class addcustomer {
       const existingContactno = await customerModel.findOne({
         mainContact: mainContact,
       });
+
       if (existingContactno) {
         return res.status(400).json({ error: "Contactno already exists" });
       }
@@ -60,7 +64,7 @@ class addcustomer {
       if (emailOrNameExists) {
         return res.status(500).json({ error: "The email already exists." });
       }
-
+     
       // Create a new customer instance with the generated card number
       const customer = new customerModel({
         cardNo: newCardNo,
@@ -91,6 +95,7 @@ class addcustomer {
         type,
         serviceExecute,
         selectedSlotText,
+        customerprofile: file,
       });
       // Save the customer data to the database
       const savedCustomer = await customer.save();

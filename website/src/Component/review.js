@@ -39,45 +39,21 @@ export default function Review() {
   ];
 
   return (
-    <div className="row mt-5">
+    <div className="row m-auto text-center mt-5">
       <h2 className="text-center boldt">Review</h2>
 
       <div className="row mt-3 slick-listsd1 ">
-        {/* <Slider {...settings}> */}
-        {/* {reviw.map((item) => (
-            <div key={item.id} className="slider-item ">
-              <div className=" bg-dark m-2  text-white rdi">
-                <div className="row text-center">
-                  <img
-                    src={item.img}
-                    className="col-md-3 m-auto"
-                    alt={`Image ${item.id}`}
-                    style={{ borderRadius: "100%" }}
-                  />
-                  <p>
-                    <span>
-                      <StarIcon className="yellw1" />
-                    </span>
-                    <span>
-                      <StarIcon className="yellw1" />
-                    </span>
-                    <span>
-                      <StarIcon className="yellw1" />
-                    </span>
-                    <span>
-                      <StarIcon className="yellw1" />
-                    </span>
-                  </p>
-                </div>
-                <p className="col-md-10 fnt12 text-center m-auto p-2 boldt">
-                  {item.review}
-                </p>
-              </div>{" "}
-            </div>
-          ))} */}
-
         <iframe
-          className="col-md-4"
+          className="col-md-4 review"
+          height="215"
+          src="https://www.youtube.com/embed/kq-GOB11iJ8?si=DS0cHMmcFS-Fpvnb"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+        <iframe
+          className="col-md-4 review"
           height="215"
           src="https://www.youtube.com/embed/5EZ5tcKTlFE?si=TkrylcfLaWZ_znP1"
           title="YouTube video player"
@@ -86,24 +62,14 @@ export default function Review() {
           allowfullscreen
         ></iframe>
         <iframe
-          className="col-md-4"
+          className="col-md-4 review"
           height="215"
-          src="https://www.youtube.com/embed/5EZ5tcKTlFE?si=TkrylcfLaWZ_znP1"
+          src="https://www.youtube.com/embed/XT9wQ3fTioY?si=uVs0Hr3oHPejJmG5"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
         ></iframe>
-        <iframe
-          className="col-md-4"
-          height="215"
-          src="https://www.youtube.com/embed/5EZ5tcKTlFE?si=TkrylcfLaWZ_znP1"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-        {/* </Slider> */}
       </div>
     </div>
   );

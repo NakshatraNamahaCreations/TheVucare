@@ -3,19 +3,21 @@ import "./summary.scss";
 import { useSelector } from "react-redux";
 import axios from "axios";
 // import { selectCartItems } from "../../../../dataStoreComponent/viewcartSlice";
+
+// import { ReactApi } from "../../../../api";
+
 export default function Summary() {
   // const cartItems = useSelector(selectCartItems);
   const [Service, setService] = useState([]);
-
+  const ReactApi = process.env.REACT_APP_API_URL;
+  const ImagApi = process.env.REACT_APP_IMAGE_API_URL;
   useEffect(() => {
     getAllServices();
   }, []);
 
   const getAllServices = async () => {
     try {
-      let res = await axios.get(
-        "http://api.thevucare.com/api/userapp/getservices"
-      );
+      let res = await axios.get(`${ReactApi}/userapp/getservices`);
       if (res.status === 200) {
         setService(res.data.service);
       }
