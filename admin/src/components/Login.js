@@ -11,7 +11,6 @@ function Login() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const apiURL = process.env.REACT_APP_API_URL;
 
   const Login = async (e) => {
     e.preventDefault();
@@ -19,7 +18,7 @@ function Login() {
       const config = {
         url: "/super/loginSuperAdmin",
         method: "post",
-        baseURL: "http://api.thevucare.com/api",
+        baseURL: "https://api.thevucare.com/api",
         headers: { "content-type": "application/json" },
         data: { emailorphone: emailOrName, password: password },
       };
@@ -40,12 +39,14 @@ function Login() {
   };
 
   return (
-    <div  style={{
-      height: "100vh",
-      backgroundImage: `url('./images/bg1.png')`,
-      backgroundSize: 'cover', // This property ensures the image covers the entire div.
-      backgroundPosition: 'center', // This property centers the image.
-    }}>
+    <div
+      style={{
+        height: "100vh",
+        backgroundImage: `url('./images/bg1.png')`,
+        backgroundSize: "cover", // This property ensures the image covers the entire div.
+        backgroundPosition: "center", // This property centers the image.
+      }}
+    >
       <div
         className="row justify-content-center"
         style={{ alignItems: "center", height: "100vh" }}
@@ -53,7 +54,6 @@ function Login() {
         <div className="col-10" style={{ marginTop: "" }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div style={{}} className="">
-             
               <Card
                 style={{
                   boxShadow: "0px 0px 5px 1px lightgreen",
@@ -62,15 +62,15 @@ function Login() {
                   width: 600,
                 }}
               >
-                 <h1
-                style={{
-                  color: "green",
-                  fontSize: "50px",
-                  textAlign: "center",
-                }}
-              >
-              Admin
-              </h1>
+                <h1
+                  style={{
+                    color: "green",
+                    fontSize: "50px",
+                    textAlign: "center",
+                  }}
+                >
+                  Admin
+                </h1>
                 <div>
                   <div
                     style={{
@@ -96,7 +96,7 @@ function Login() {
                           width: "60%",
                           marginLeft: "20%",
                           borderRadius: "3px",
-                         
+
                           marginTop: "10px",
                         }}
                         onChange={(e) => setEmailOrName(e.target.value)}
@@ -111,13 +111,11 @@ function Login() {
                           width: "60%",
                           marginLeft: "20%",
                           borderRadius: "3px",
-                          
                         }}
                         onChange={(e) => setpassword(e.target.value)}
                       />
                     </div>
                   </div>
-                
 
                   <div className="text-center pt-3">
                     <Button
@@ -127,8 +125,8 @@ function Login() {
                         backgroundColor: "gold",
                         border: "none",
                         fontWeight: "bold",
-                        color:"green",
-                        fontSize:"18px"
+                        color: "green",
+                        fontSize: "18px",
                       }}
                       onClick={Login}
                     >

@@ -496,7 +496,7 @@ function Servicedetails() {
                                       <p>Contact For Price</p>
                                     ) : (
                                       <>
-                                        <span className="col-md-6  m-auto real_price wrong_price">
+                                        <span className="col-md-6  m-auto real_price ">
                                           {filteredElement?.pofferprice &&
                                             "Rs."}{" "}
                                           {filteredElement?.pofferprice}
@@ -651,8 +651,8 @@ function Servicedetails() {
                                         {filteredElement?.pPrice && "Rs."}{" "}
                                         {filteredElement?.pPrice}
                                       </span>
-                                      <span className="col-md-6 m-auto real_price wrong_price">
-                                        {filteredElement?.pPrice && "Rs."}{" "}
+                                      <span className="col-md-6 m-auto real_price ">
+                                        {filteredElement?.pofferprice && "Rs."}{" "}
                                         {filteredElement?.pofferprice}
                                       </span>
                                     </>

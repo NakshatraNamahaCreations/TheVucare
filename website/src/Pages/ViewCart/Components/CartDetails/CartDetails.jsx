@@ -75,7 +75,7 @@ export default function CartDetails() {
   const [SelectedAddress, setSelectedAddress] = useState(null);
   const [allBookedServices, setallBookedServices] = useState(null);
 
-  // console.log("selectedDate", selectedDate);
+  // console.log("selectecity", selectecity);
   useEffect(() => {
     getAllServices();
     getVoucher();
@@ -652,7 +652,7 @@ export default function CartDetails() {
                               {filteredElement?.pPrice}
                             </span>
                             <span className="col-md-6 m-auto valudwidth1 real_price ">
-                              {filteredElement?.pPrice && "Rs."}{" "}
+                              {filteredElement?.pofferprice && "Rs."}{" "}
                               {filteredElement?.pofferprice}
                             </span>
                           </div>
@@ -742,31 +742,41 @@ export default function CartDetails() {
                   <div className="date_selection">
                     {services?.map((ele) =>
                       ele.store_slots?.map((slotItem) => {
-                        const isSlotSelected = selectedSlotsID?.some(
-                          (ele) =>
-                            ele?.endTime === slotItem?.endTime &&
-                            ele?.startTime === slotItem?.startTime
-                        );
+                        const city = selectecity?.toLowerCase();
+                        const LSlotcity = slotItem?.slotCity
+                          ?.toLowerCase()
+                          .trim();
 
-                        return (
-                          <label key={slotItem.id} htmlFor={slotItem.id}>
-                            <input type="checkbox" />
+                        if (LSlotcity?.includes(city)) {
+                          const isSlotSelected = selectedSlotsID?.some(
+                            (ele) =>
+                              ele?.endTime === slotItem?.endTime &&
+                              ele?.startTime === slotItem?.startTime
+                          );
 
-                            <span
-                              className={`p-2 inpt ${
-                                isSlotSelected ? "matching" : ""
-                              }`}
-                              onClick={() =>
-                                handleSlotSelect(
-                                  slotItem?.startTime,
-                                  slotItem?.endTime
-                                )
-                              }
-                            >
-                              {slotItem.startTime} - {slotItem.endTime}
-                            </span>
-                          </label>
-                        );
+                          return (
+                            <div key={slotItem.id}>
+                              <label htmlFor={slotItem.id}>
+                                <input type="checkbox" />
+                                <span
+                                  className={`p-2 inpt ${
+                                    isSlotSelected ? "matching" : ""
+                                  }`}
+                                  onClick={() =>
+                                    handleSlotSelect(
+                                      slotItem?.startTime,
+                                      slotItem?.endTime
+                                    )
+                                  }
+                                >
+                                  {slotItem.startTime} - {slotItem.endTime}
+                                </span>
+                              </label>
+                            </div>
+                          );
+                        }
+
+                        return null;
                       })
                     )}
                   </div>

@@ -16,7 +16,7 @@ function Settings() {
       const config = {
         url: `/super/changepassword/${admin?._id}`,
         method: "post",
-        baseURL: "http://api.thevucare.com/api",
+        baseURL: "https://api.thevucare.com/api",
         headers: { "content-type": "application/json" },
         data: {
           oldPassword: oldPassword,
